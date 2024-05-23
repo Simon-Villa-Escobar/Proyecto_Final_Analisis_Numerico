@@ -264,29 +264,37 @@ def newton(fn, dfi, f, df, p_0, tol, n):
 
 #Raices Multiples
 
-def multiple_roots(f,df,df2,x0,tol,n):
-  xant = x0
-  fant = f(xant)
-  e_abs=1000
-  iteration = 0
-  resultados =[[iteration,xant,f(xant),""]]
-  
-  while iteration<=n:
-    xact = xant - fant * df(xant) / ((df(xant))**2 - fant * df2(xant))
-    fact = f(xact)
-    e_abs = abs(xact-xant)
-    iteration += 1
-    xant = xact
-    fant = fact
-    resultados.append([iteration,xant,f(xant),e_abs])    
+def multiple_roots(sd, pd, dd, f,df,df2,x0,tol,n):
+    xant = x0
+    fant = f(xant)
+    e_abs=1000
+    iteration = 0
+    resultados =[[iteration,xant,f(xant),""]]
     
-    if e_abs<tol:
-      st.write("Solución encontrada en x =", xact, "     Iteraciones:", iteration-1, "    Error =", e_abs)
-      break
+    while iteration<=n:
+        xact = xant - fant * df(xant) / ((df(xant))**2 - fant * df2(xant))
+        fact = f(xact)
+        e_abs = abs(xact-xant)
+        iteration += 1
+        xant = xact
+        fant = fact
+        resultados.append([iteration,xant,f(xant),e_abs])    
+        
+        if e_abs<tol:
+            st.write("Solución encontrada en x =", xact, "     Iteraciones:", iteration-1, "    Error =", e_abs)
+            break
+    
+    if iteration > n:
+        st.write("Solution not found for tolerance = ", tol)
+    st.write(tabulate(resultados, headers=["Iteraciones", "Xi", "f(x)", "Error"], tablefmt="github"))
+    
   
-  if iteration > n:
-    st.write("Solution not found for tolerance = ", tol)
-  st.write(tabulate(resultados, headers=["Iteraciones", "Xi", "f(x)", "Error"], tablefmt="github"))
+    tabla_formateada = tabulate(resultados, headers=["Iteraciones", "Xi", "f(x)", "Error"], tablefmt="github")
+  
+    with open('resultados.txt', 'a') as archivo:
+        archivo.write(f"\n\n\nResultados del metodo de raices multiples para la funcion {sd}, la derivada {pd} y la segunda derivada {dd} con un punto inicial de {x0}, con una tolerancia de {tol}\n\n")
+        archivo.write(tabla_formateada + "\n")
+  
 
 def secante(f, p_0, p_1, tol, n):
     if p_0==p_1:
@@ -1115,8 +1123,124 @@ if metodo_seleccionado_capitulo1 == 'Newton':
 
 
 
-#Raices Multiples
-elif metodo_seleccionado_capitulo1 == 'Raices Multiples':
+# #Raices Multiples
+# elif metodo_seleccionado_capitulo1 == 'Raices Multiples':
+#     st.header("Método de Raices Multiples (Newton modificado 2)")
+   
+#     st.write("")
+#     st.write("")
+#     st.write("")
+#     st.write("")
+#     st.write("------------------------------------------------")
+#     st.write("")
+#     st.write("")
+#     st.write("")
+#     st.write("")
+     
+#     st.write("Paso 1 del Método de Newton Modificado:")
+#     st.write("Calcular el siguiente punto usando la siguiente formula:")
+#     st.latex(r' x_{n+1} = x_n - \frac{f(x_n)*f\'(n)}{(f\'(n))^2 - f(x_n)*f\"(n)}')
+    
+#     st.write("")
+#     st.write("")
+#     st.write("")
+#     st.write("")
+#     st.write("------------------------------------------------")
+#     st.write("")
+#     st.write("")
+#     st.write("")
+#     st.write("")    
+    
+#     # st.info('Debe asegurarse que f(x) sea continua para el intervalo y que la derivada y la segunda derivada esten correctas', icon="ℹ️")
+#     input_function_f = st.text_input('Digite la función f a evaluar')
+#     function_name_f = st.latex(input_function_f)
+#     st.info("""Debe asegurarse que:\n
+#             F(x) sea continua en el intervalo
+#     F'(x) y F''(x) no sean iguales a cero en un mismo punto del intervalo""", icon="ℹ️")
+#     input_function_df = st.text_input('Digite la función df a evaluar')
+#     function_name_df = st.latex(input_function_df)
+#     input_function_df2 = st.text_input('Digite la función df2 a evaluar')
+#     function_name_df2 = st.latex(input_function_df2)
+#     initial_value = st.number_input('Digite el valor inicial X0', min_value=-500, max_value=500, step=1, value=5)
+#     tolerance = st.text_input('Digite la tolerancia',value=0.5e-5)
+#     valor = float(tolerance)
+#     max_iterations = st.number_input('Digite la iteración máxima', min_value=1, step=1, value=100)
+#     expr_with_numpy_f = reemplazar_funciones_matematicas(input_function_f)
+#     st.text(expr_with_numpy_f)
+#     expr_with_numpy_df = reemplazar_funciones_matematicas(input_function_df)
+#     st.text(expr_with_numpy_df)
+#     expr_with_numpy_df2 = reemplazar_funciones_matematicas(input_function_df2)
+#     st.text(expr_with_numpy_df2)
+#     if expr_with_numpy_f:
+#         func_f = eval(f"lambda x: {expr_with_numpy_f}") # Convertir string a función
+
+#     if expr_with_numpy_df:
+#         func_df = eval(f"lambda x: {expr_with_numpy_df}") # Convertir string a función
+
+#     if expr_with_numpy_df2:
+#         func_df2 = eval(f"lambda x: {expr_with_numpy_df2}") # Convertir string a función
+#     if st.button('Graficar f(x)'):
+#         # Procesar la función ingresada por el usuario
+#         x = np.linspace(-8, 8, 1000)
+#         y = eval(expr_with_numpy_f)  # Evaluar la expresión matemática
+
+#         # Crear el gráfico con tamaño ajustado
+#         fig, ax = plt.subplots(figsize=(8, 6))  # Ajustar el tamaño de la figura aquí
+#         ax.plot(x, y, color='red', label='Función')
+#         ax.axhline(0, color='black', linestyle='-', linewidth=1)
+#         ax.axvline(0, color='black', linestyle='-', linewidth=1)
+#         ax.set_xlabel("x")
+#         ax.set_ylabel("f(x)")
+#         ax.set_title(f"Gráfico de la Función: {input_function_f}")
+#         ax.legend()
+#         ax.grid(True)
+
+#         # Mostrar el gráfico en Streamlit
+#         st.pyplot(fig)
+#     if st.button("Graficar f'(x)"):
+#         # Procesar la función ingresada por el usuario
+#         x = np.linspace(-8, 8, 1000)
+#         y = eval(expr_with_numpy_df)  # Evaluar la expresión matemática
+
+#         # Crear el gráfico con tamaño ajustado
+#         fig, ax = plt.subplots(figsize=(8, 6))  # Ajustar el tamaño de la figura aquí
+#         ax.plot(x, y, color='red', label='Función')
+#         ax.axhline(0, color='black', linestyle='-', linewidth=1)
+#         ax.axvline(0, color='black', linestyle='-', linewidth=1)
+#         ax.set_xlabel("x")
+#         ax.set_ylabel("f(x)")
+#         ax.set_title(f"Gráfico de la Función: {input_function_df}")
+#         ax.legend()
+#         ax.grid(True)
+
+#         # Mostrar el gráfico en Streamlit
+#         st.pyplot(fig)
+#     if st.button("Graficar f''(x)"):
+#         # Procesar la función ingresada por el usuario
+#         x = np.linspace(-8, 8, 1000)
+#         y = eval(expr_with_numpy_df2)  # Evaluar la expresión matemática
+
+#         # Crear el gráfico con tamaño ajustado
+#         fig, ax = plt.subplots(figsize=(8, 6))  # Ajustar el tamaño de la figura aquí
+#         ax.plot(x, y, color='red', label='Función')
+#         ax.axhline(0, color='black', linestyle='-', linewidth=1)
+#         ax.axvline(0, color='black', linestyle='-', linewidth=1)
+#         ax.set_xlabel("x")
+#         ax.set_ylabel("f(x)")
+#         ax.set_title(f"Gráfico de la Función: {input_function_df2}")
+#         ax.legend()
+#         ax.grid(True)
+
+#         # Mostrar el gráfico en Streamlit
+#         st.pyplot(fig)
+
+
+
+
+
+
+
+if metodo_seleccionado_capitulo1 == 'Raices Multiples':
     st.header("Método de Raices Multiples (Newton modificado 2)")
    
     st.write("")
@@ -1130,8 +1254,8 @@ elif metodo_seleccionado_capitulo1 == 'Raices Multiples':
     st.write("")
      
     st.write("Paso 1 del Método de Newton Modificado:")
-    st.write("Calcular el siguiente punto usando la siguiente formula:")
-    st.latex(r' x_{n+1} = x_n - \frac{f(x_n)*f\'(n)}{(f\'(n))^2 - f(x_n)*f\"(n)}')
+    st.write("Calcular el siguiente punto usando la siguiente fórmula:")
+    st.latex(r' x_{n+1} = x_n - \frac{f(x_n) f\'(x_n)}{(f\'(x_n))^2 - f(x_n) f\"(x_n)}')
     
     st.write("")
     st.write("")
@@ -1143,88 +1267,149 @@ elif metodo_seleccionado_capitulo1 == 'Raices Multiples':
     st.write("")
     st.write("")    
     
-    # st.info('Debe asegurarse que f(x) sea continua para el intervalo y que la derivada y la segunda derivada esten correctas', icon="ℹ️")
     input_function_f = st.text_input('Digite la función f a evaluar')
-    function_name_f = st.latex(input_function_f)
     st.info("""Debe asegurarse que:\n
             F(x) sea continua en el intervalo
     F'(x) y F''(x) no sean iguales a cero en un mismo punto del intervalo""", icon="ℹ️")
-    input_function_df = st.text_input('Digite la función df a evaluar')
-    function_name_df = st.latex(input_function_df)
-    input_function_df2 = st.text_input('Digite la función df2 a evaluar')
-    function_name_df2 = st.latex(input_function_df2)
-    initial_value = st.number_input('Digite el valor inicial X0', min_value=-500, max_value=500, step=1, value=5)
-    tolerance = st.text_input('Digite la tolerancia',value=0.5e-5)
-    valor = float(tolerance)
-    max_iterations = st.number_input('Digite la iteración máxima', min_value=1, step=1, value=100)
-    expr_with_numpy_f = reemplazar_funciones_matematicas(input_function_f)
-    st.text(expr_with_numpy_f)
-    expr_with_numpy_df = reemplazar_funciones_matematicas(input_function_df)
-    st.text(expr_with_numpy_df)
-    expr_with_numpy_df2 = reemplazar_funciones_matematicas(input_function_df2)
-    st.text(expr_with_numpy_df2)
-    if expr_with_numpy_f:
-        func_f = eval(f"lambda x: {expr_with_numpy_f}") # Convertir string a función
 
-    if expr_with_numpy_df:
-        func_df = eval(f"lambda x: {expr_with_numpy_df}") # Convertir string a función
+    if input_function_f:
+        try:
+            # Convertir la función ingresada en una expresión simbólica
+            function_f = sym.sympify(input_function_f)
 
-    if expr_with_numpy_df2:
-        func_df2 = eval(f"lambda x: {expr_with_numpy_df2}") # Convertir string a función
-    if st.button('Graficar f(x)'):
-        # Procesar la función ingresada por el usuario
-        x = np.linspace(-8, 8, 1000)
-        y = eval(expr_with_numpy_f)  # Evaluar la expresión matemática
+            # Calcular la primera y segunda derivada de la función
+            df_function = sym.diff(function_f, sym.Symbol('x'))
+            df2_function = sym.diff(df_function, sym.Symbol('x'))
 
-        # Crear el gráfico con tamaño ajustado
-        fig, ax = plt.subplots(figsize=(8, 6))  # Ajustar el tamaño de la figura aquí
-        ax.plot(x, y, color='red', label='Función')
-        ax.axhline(0, color='black', linestyle='-', linewidth=1)
-        ax.axvline(0, color='black', linestyle='-', linewidth=1)
-        ax.set_xlabel("x")
-        ax.set_ylabel("f(x)")
-        ax.set_title(f"Gráfico de la Función: {input_function_f}")
-        ax.legend()
-        ax.grid(True)
+            # Mostrar la función ingresada en formato LaTeX
+            st.latex(f"f(x) = {sym.latex(function_f)}")
 
-        # Mostrar el gráfico en Streamlit
-        st.pyplot(fig)
-    if st.button("Graficar f'(x)"):
-        # Procesar la función ingresada por el usuario
-        x = np.linspace(-8, 8, 1000)
-        y = eval(expr_with_numpy_df)  # Evaluar la expresión matemática
+            # Mostrar las derivadas en formato LaTeX dentro de st.info
+            st.info(f"La derivada primera de la función f es: f'(x) = {sym.latex(df_function)}")
+            st.info(f"La derivada segunda de la función f es: f''(x) = {sym.latex(df2_function)}")
 
-        # Crear el gráfico con tamaño ajustado
-        fig, ax = plt.subplots(figsize=(8, 6))  # Ajustar el tamaño de la figura aquí
-        ax.plot(x, y, color='red', label='Función')
-        ax.axhline(0, color='black', linestyle='-', linewidth=1)
-        ax.axvline(0, color='black', linestyle='-', linewidth=1)
-        ax.set_xlabel("x")
-        ax.set_ylabel("f(x)")
-        ax.set_title(f"Gráfico de la Función: {input_function_df}")
-        ax.legend()
-        ax.grid(True)
+            # Mostrar las derivadas en cuadros de texto
+            input_function_df = st.text_input('Digite la función df a evaluar', value=str(df_function))
+            input_function_df2 = st.text_input('Digite la función df2 a evaluar', value=str(df2_function))
 
-        # Mostrar el gráfico en Streamlit
-        st.pyplot(fig)
-    if st.button("Graficar f''(x)"):
-        # Procesar la función ingresada por el usuario
-        x = np.linspace(-8, 8, 1000)
-        y = eval(expr_with_numpy_df2)  # Evaluar la expresión matemática
+            function_df = sym.sympify(input_function_df)
+            function_df2 = sym.sympify(input_function_df2)
+            
+            st.latex(f"f'(x) = {sym.latex(function_df)}")
+            st.latex(f"f''(x) = {sym.latex(function_df2)}")
 
-        # Crear el gráfico con tamaño ajustado
-        fig, ax = plt.subplots(figsize=(8, 6))  # Ajustar el tamaño de la figura aquí
-        ax.plot(x, y, color='red', label='Función')
-        ax.axhline(0, color='black', linestyle='-', linewidth=1)
-        ax.axvline(0, color='black', linestyle='-', linewidth=1)
-        ax.set_xlabel("x")
-        ax.set_ylabel("f(x)")
-        ax.set_title(f"Gráfico de la Función: {input_function_df2}")
-        ax.legend()
-        ax.grid(True)
+            # Pedir el valor inicial, la tolerancia y el número máximo de iteraciones
+            initial_value = st.number_input('Digite el valor inicial X0', min_value=-500.0, max_value=500.0, step=1.0, value=5.0)
+            tolerance = st.text_input('Digite la tolerancia', value=0.5e-5)
+            valor = float(tolerance)
+            max_iterations = st.number_input('Digite la iteración máxima', min_value=1, step=1, value=100)
 
-        # Mostrar el gráfico en Streamlit
-        st.pyplot(fig)
+            # Convertir las funciones a expresiones compatibles con numpy
+            expr_with_numpy_f = reemplazar_funciones_matematicas(input_function_f)
+            st.text(expr_with_numpy_f)
+            expr_with_numpy_df = reemplazar_funciones_matematicas(input_function_df)
+            st.text(expr_with_numpy_df)
+            expr_with_numpy_df2 = reemplazar_funciones_matematicas(input_function_df2)
+            st.text(expr_with_numpy_df2)
+
+            # Crear funciones evaluables en Python
+            func_f = eval(f"lambda x: {expr_with_numpy_f}") if expr_with_numpy_f else None
+            func_df = eval(f"lambda x: {expr_with_numpy_df}") if expr_with_numpy_df else None
+            func_df2 = eval(f"lambda x: {expr_with_numpy_df2}") if expr_with_numpy_df2 else None
+
+                
+            if st.button('Graficar f(x)'):
+                # Procesar la función ingresada por el usuario
+                x_vals = np.linspace(-0.1, 3.1, 1000)
+                y_vals = func_f(x_vals)  # Evaluar la expresión matemática
+
+                # Crear el gráfico con tamaño ajustado
+                fig, ax = plt.subplots(figsize=(8, 6))  # Ajustar el tamaño de la figura aquí
+                ax.plot(x_vals, y_vals, color='red', label='Función')
+                ax.axhline(0, color='black', linestyle='-', linewidth=1)
+                ax.axvline(0, color='black', linestyle='-', linewidth=1)
+                ax.set_xlabel("x")
+                ax.set_ylabel("f(x)")
+                ax.set_title(f"Gráfico de la Función: {input_function_f}")
+                ax.legend()
+                ax.grid(True)
+
+                # Mostrar el gráfico en Streamlit
+                st.pyplot(fig)
+            
+            if st.button("Graficar f'(x)"):
+                # Procesar la función ingresada por el usuario
+                x_vals = np.linspace(-0.1, 4, 1000)
+                y_vals = func_df(x_vals)  # Evaluar la expresión matemática
+
+                # Crear el gráfico con tamaño ajustado
+                fig, ax = plt.subplots(figsize=(8, 6))  # Ajustar el tamaño de la figura aquí
+                ax.plot(x_vals, y_vals, color='blue', label="Derivada f'(x)")
+                ax.axhline(0, color='black', linestyle='-', linewidth=1)
+                ax.axvline(0, color='black', linestyle='-', linewidth=1)
+                ax.set_xlabel("x")
+                ax.set_ylabel("f'(x)")
+                ax.set_title(f"Gráfico de la Derivada: {input_function_df}")
+                ax.legend()
+                ax.grid(True)
+
+                # Mostrar el gráfico en Streamlit
+                st.pyplot(fig)
+
+            if st.button("Graficar f''(x)"):
+                # Procesar la función ingresada por el usuario
+                x_vals = np.linspace(0.95, 2.6, 1000)
+                
+                y_vals = func_df2(x_vals)  # Evaluar la expresión matemática
+
+                # Crear el gráfico con tamaño ajustado
+                fig, ax = plt.subplots(figsize=(8, 6))  # Ajustar el tamaño de la figura aquí
+                ax.plot(x_vals, y_vals, color='green', label="Derivada f''(x)")
+                ax.axhline(0, color='black', linestyle='-', linewidth=1)
+                ax.axvline(0, color='black', linestyle='-', linewidth=1)
+                ax.set_xlabel("x")
+                ax.set_ylabel("f''(x)")
+                ax.set_title(f"Gráfico de la Segunda Derivada: {input_function_df2}")
+                ax.legend()
+                ax.grid(True)
+
+                # Mostrar el gráfico en Streamlit
+                st.pyplot(fig)
+
+        except sym.SympifyError as e:
+            st.error(f"Error al parsear la función ingresada: {e}")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 #Secante
 elif metodo_seleccionado_capitulo1 == 'Secante':
@@ -1445,7 +1630,7 @@ if metodo_seleccionado_capitulo1 != '':
         elif metodo_seleccionado_capitulo1 == 'Newton':
             newton(input_function_f, input_function_df, func_f,func_df,initial_value,valor,max_iterations)
         elif metodo_seleccionado_capitulo1 == 'Raices Multiples':
-            multiple_roots(func_f,func_df,func_df2,initial_value,valor,max_iterations)
+            multiple_roots(input_function_f, input_function_df, input_function_df2, func_f,func_df,func_df2,initial_value,valor,max_iterations)
         elif metodo_seleccionado_capitulo1 == 'Secante':
             secante(func,interval_a,interval_b,valor,max_iterations)
 
