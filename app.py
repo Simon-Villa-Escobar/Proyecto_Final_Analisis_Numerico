@@ -232,8 +232,9 @@ def false_position(fn, f,a,b,tol,n):
 
 
 #Newton
-def newton(f, df, p_0, tol, n):
-    st.write("Iteración: ", 0, " En el punto inicial = ", p_0)
+def newton(fn, dfi, f, df, p_0, tol, n):
+    # st.write("Iteración: ", 0, " En el punto inicial = ", p_0)
+    p0 = p_0
     resultados=[[0, p_0, f(p_0),""]]
     e_abs = 1
     i = 1
@@ -253,6 +254,13 @@ def newton(f, df, p_0, tol, n):
     if i > n:
         st.write("Solución no encontrada para la tolerancia:" , tol,"Iteraciones Utilizadas:", i-1)
     st.write(tabulate(resultados, headers=["Iteraciones", "Xi", "f(xi)", "Error"], tablefmt="github", floatfmt=(".10f",".10f")))
+    
+    tabla_formateada = tabulate(resultados, headers=["Iteraciones", "Xi", "f(xi)", "Error"], tablefmt="github", floatfmt=(".10f",".10f"))
+    
+    with open('resultados.txt', 'a') as archivo:
+        archivo.write(f"\n\n\nResultados del metodo de newton para la funcion {fn}, la derivada {dfi} con un punto inicial de {p0}, con una tolerancia de {tol}\n\n")
+        archivo.write(tabla_formateada + "\n")    
+    
 
 #Raices Multiples
 
@@ -882,8 +890,102 @@ elif metodo_seleccionado_capitulo1 == 'Regla Falsa':
         # Mostrar el gráfico en Streamlit
         st.pyplot(fig)
 
-#Newton
-elif metodo_seleccionado_capitulo1 == 'Newton':
+# #Newton
+# elif metodo_seleccionado_capitulo1 == 'Newton':
+#     st.header("Método de Newton")
+    
+#     st.write("")
+#     st.write("")
+#     st.write("")
+#     st.write("")
+#     st.write("------------------------------------------------")
+#     st.write("")
+#     st.write("")
+#     st.write("")
+#     st.write("")
+    
+#     st.write("Paso 1 del Método de Newton:")
+#     st.write("Calcular el siguiente punto usando la pendiente de la tangente:")
+#     st.latex(r'   x_{i+1} = x_i - \frac{f(x_i)}{f\'(x_i)}')
+    
+#     st.write("")
+#     st.write("")
+#     st.write("")
+#     st.write("")
+#     st.write("------------------------------------------------")
+#     st.write("")
+#     st.write("")
+#     st.write("")
+#     st.write("")
+    
+#     input_function_f = st.text_input('Digite la función f a evaluar')
+#     st.info("""Debe asegurarse que:\n
+#             F(x) sea continua en el intervalo
+#     F'(x) no sea igual a cero en ninguno de los puntos del intervalo que se analiza""", icon="ℹ️")
+#     function_name_f = st.latex(input_function_f)
+#     input_function_df = st.text_input('Digite la función df a evaluar')
+#     function_name_df = st.latex(input_function_df)
+#     initial_value = st.number_input('Digite el valor inicial X0', min_value=-500.0, max_value=500.0, step=0.5, value=5.0, format="%.2f")
+#     tolerance = st.text_input('Digite la tolerancia',value=0.5e-5)
+#     valor = float(tolerance)
+#     max_iterations = st.number_input('Digite la iteración máxima', min_value=1, step=1, value=100)
+#     expr_with_numpy_f = reemplazar_funciones_matematicas(input_function_f)
+#     st.text(expr_with_numpy_f)
+#     expr_with_numpy_df = reemplazar_funciones_matematicas(input_function_df)
+#     st.text(expr_with_numpy_df)
+#     if expr_with_numpy_f:
+#         func_f = eval(f"lambda x: {expr_with_numpy_f}") # Convertir string a función
+
+#     if expr_with_numpy_df:
+#         func_df = eval(f"lambda x: {expr_with_numpy_df}") # Convertir string a función
+#     if st.button('Graficar f(x)'):
+#         # Procesar la función ingresada por el usuario
+#         x = np.linspace(-8, 8, 1000)
+#         y = eval(expr_with_numpy_f)  # Evaluar la expresión matemática
+
+#         # Crear el gráfico con tamaño ajustado
+#         fig, ax = plt.subplots(figsize=(8, 6))  # Ajustar el tamaño de la figura aquí
+#         ax.plot(x, y, color='red', label='Función')
+#         ax.axhline(0, color='black', linestyle='-', linewidth=1)
+#         ax.axvline(0, color='black', linestyle='-', linewidth=1)
+#         ax.set_xlabel("x")
+#         ax.set_ylabel("f(x)")
+#         ax.set_title(f"Gráfico de la Función: {input_function_f}")
+#         ax.legend()
+#         ax.grid(True)
+
+#         # Mostrar el gráfico en Streamlit
+#         st.pyplot(fig)
+#     if st.button("Graficar f'(x)"):
+#         # Procesar la función ingresada por el usuario
+#         x = np.linspace(-8, 8, 1000)
+#         y = eval(expr_with_numpy_df)  # Evaluar la expresión matemática
+
+#         # Crear el gráfico con tamaño ajustado
+#         fig, ax = plt.subplots(figsize=(8, 6))  # Ajustar el tamaño de la figura aquí
+#         ax.plot(x, y, color='red', label='Función')
+#         ax.axhline(0, color='black', linestyle='-', linewidth=1)
+#         ax.axvline(0, color='black', linestyle='-', linewidth=1)
+#         ax.set_xlabel("x")
+#         ax.set_ylabel("f(x)")
+#         ax.set_title(f"Gráfico de la Función: {input_function_df}")
+#         ax.legend()
+#         ax.grid(True)
+
+#         # Mostrar el gráfico en Streamlit
+#         st.pyplot(fig)
+
+
+
+
+
+
+
+
+
+
+# Sección del Método de Newton
+if metodo_seleccionado_capitulo1 == 'Newton':
     st.header("Método de Newton")
     
     st.write("")
@@ -910,63 +1012,108 @@ elif metodo_seleccionado_capitulo1 == 'Newton':
     st.write("")
     st.write("")
     
-
     input_function_f = st.text_input('Digite la función f a evaluar')
     st.info("""Debe asegurarse que:\n
-            F(x) sea continua en el intervalo
-    F'(x) no sea igual a cero en ninguno de los puntos del intervalo que se analiza""", icon="ℹ️")
-    function_name_f = st.latex(input_function_f)
-    input_function_df = st.text_input('Digite la función df a evaluar')
-    function_name_df = st.latex(input_function_df)
-    initial_value = st.number_input('Digite el valor inicial X0', min_value=-500.0, max_value=500.0, step=0.5, value=5.0, format="%.2f")
-    tolerance = st.text_input('Digite la tolerancia',value=0.5e-5)
-    valor = float(tolerance)
-    max_iterations = st.number_input('Digite la iteración máxima', min_value=1, step=1, value=100)
-    expr_with_numpy_f = reemplazar_funciones_matematicas(input_function_f)
-    st.text(expr_with_numpy_f)
-    expr_with_numpy_df = reemplazar_funciones_matematicas(input_function_df)
-    st.text(expr_with_numpy_df)
-    if expr_with_numpy_f:
-        func_f = eval(f"lambda x: {expr_with_numpy_f}") # Convertir string a función
+              F(x) sea continua en el intervalo\n
+              F'(x) no sea igual a cero en ninguno de los puntos del intervalo que se analiza""", icon="ℹ️")
 
-    if expr_with_numpy_df:
-        func_df = eval(f"lambda x: {expr_with_numpy_df}") # Convertir string a función
-    if st.button('Graficar f(x)'):
-        # Procesar la función ingresada por el usuario
-        x = np.linspace(-8, 8, 1000)
-        y = eval(expr_with_numpy_f)  # Evaluar la expresión matemática
+    if input_function_f:
+        try:
+            # Convertir la función ingresada en una expresión simbólica
+            function_f = sym.sympify(input_function_f)
 
-        # Crear el gráfico con tamaño ajustado
-        fig, ax = plt.subplots(figsize=(8, 6))  # Ajustar el tamaño de la figura aquí
-        ax.plot(x, y, color='red', label='Función')
-        ax.axhline(0, color='black', linestyle='-', linewidth=1)
-        ax.axvline(0, color='black', linestyle='-', linewidth=1)
-        ax.set_xlabel("x")
-        ax.set_ylabel("f(x)")
-        ax.set_title(f"Gráfico de la Función: {input_function_f}")
-        ax.legend()
-        ax.grid(True)
+            # Calcular la derivada de la función
+            df_function = sym.diff(function_f, sym.Symbol('x'))
 
-        # Mostrar el gráfico en Streamlit
-        st.pyplot(fig)
-    if st.button("Graficar f'(x)"):
-        # Procesar la función ingresada por el usuario
-        x = np.linspace(-8, 8, 1000)
-        y = eval(expr_with_numpy_df)  # Evaluar la expresión matemática
+            # Mostrar la función ingresada en formato LaTeX
+            st.latex(f"f(x) = {sym.latex(function_f)}")
 
-        # Crear el gráfico con tamaño ajustado
-        fig, ax = plt.subplots(figsize=(8, 6))  # Ajustar el tamaño de la figura aquí
-        ax.plot(x, y, color='red', label='Función')
-        ax.axhline(0, color='black', linestyle='-', linewidth=1)
-        ax.axvline(0, color='black', linestyle='-', linewidth=1)
-        ax.set_xlabel("x")
-        ax.set_ylabel("f(x)")
-        ax.set_title(f"Gráfico de la Función: {input_function_df}")
-        ax.legend()
-        ax.grid(True)
+            # Mostrar la derivada en formato LaTeX dentro de st.info
+            # st.info(f"La derivada de la función f es: f'(x) = {sym.latex(df_function)}")
 
-        # Mostrar el gráfico en Streamlit
-        st.pyplot(fig)
+            # Solicitar al usuario que ingrese la función derivada
+            input_function_df = st.text_input('Digite la función df a evaluar', value=str(df_function))
+            
+            function_df = sym.sympify(input_function_df)
+            
+            st.latex(f"f'(x) = {sym.latex(function_df)}")
+            
+            # Pedir el valor inicial, la tolerancia y el número máximo de iteraciones
+            initial_value = st.number_input('Digite el valor inicial X0', min_value=-500.0, max_value=500.0, step=0.5, value=5.0, format="%.2f")
+            tolerance = st.text_input('Digite la tolerancia', value=0.5e-5)
+            valor = float(tolerance)
+            max_iterations = st.number_input('Digite la iteración máxima', min_value=1, step=1, value=100)
+            
+            # Convertir las funciones a expresiones compatibles con numpy
+            expr_with_numpy_f = reemplazar_funciones_matematicas(input_function_f)
+            st.text(expr_with_numpy_f)
+            expr_with_numpy_df = reemplazar_funciones_matematicas(input_function_df)
+            st.text(expr_with_numpy_df)
+            
+            # Crear funciones evaluables en Python
+            func_f = eval(f"lambda x: {expr_with_numpy_f}") if expr_with_numpy_f else None
+            func_df = eval(f"lambda x: {expr_with_numpy_df}") if expr_with_numpy_df else None
+            
+            if st.button('Graficar f(x)'):
+                # Procesar la función ingresada por el usuario
+                x_vals = np.linspace(-8, 8, 1000)
+                y_vals = func_f(x_vals)  # Evaluar la expresión matemática
+
+                # Crear el gráfico con tamaño ajustado
+                fig, ax = plt.subplots(figsize=(8, 6))  # Ajustar el tamaño de la figura aquí
+                ax.plot(x_vals, y_vals, color='red', label='Función')
+                ax.axhline(0, color='black', linestyle='-', linewidth=1)
+                ax.axvline(0, color='black', linestyle='-', linewidth=1)
+                ax.set_xlabel("x")
+                ax.set_ylabel("f(x)")
+                ax.set_title(f"Gráfico de la Función: {input_function_f}")
+                ax.legend()
+                ax.grid(True)
+
+                # Mostrar el gráfico en Streamlit
+                st.pyplot(fig)
+            
+            if st.button("Graficar f'(x)"):
+                # Procesar la función ingresada por el usuario
+                x_vals = np.linspace(-8, 8, 1000)
+                y_vals = func_df(x_vals)  # Evaluar la expresión matemática
+
+                # Crear el gráfico con tamaño ajustado
+                fig, ax = plt.subplots(figsize=(8, 6))  # Ajustar el tamaño de la figura aquí
+                ax.plot(x_vals, y_vals, color='blue', label="Derivada f'(x)")
+                ax.axhline(0, color='black', linestyle='-', linewidth=1)
+                ax.axvline(0, color='black', linestyle='-', linewidth=1)
+                ax.set_xlabel("x")
+                ax.set_ylabel("f'(x)")
+                ax.set_title(f"Gráfico de la Derivada: {input_function_df}")
+                ax.legend()
+                ax.grid(True)
+
+                # Mostrar el gráfico en Streamlit
+                st.pyplot(fig)
+
+        except sym.SympifyError as e:
+            st.error(f"Error al parsear la función ingresada: {e}")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 #Raices Multiples
 elif metodo_seleccionado_capitulo1 == 'Raices Multiples':
@@ -1296,7 +1443,7 @@ if metodo_seleccionado_capitulo1 != '':
         elif metodo_seleccionado_capitulo1 == 'Regla Falsa':
             false_position(input_function, func,interval_a,interval_b,valor,max_iterations)
         elif metodo_seleccionado_capitulo1 == 'Newton':
-            newton(func_f,func_df,initial_value,valor,max_iterations)
+            newton(input_function_f, input_function_df, func_f,func_df,initial_value,valor,max_iterations)
         elif metodo_seleccionado_capitulo1 == 'Raices Multiples':
             multiple_roots(func_f,func_df,func_df2,initial_value,valor,max_iterations)
         elif metodo_seleccionado_capitulo1 == 'Secante':
