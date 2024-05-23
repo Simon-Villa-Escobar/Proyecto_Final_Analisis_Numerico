@@ -296,7 +296,9 @@ def multiple_roots(sd, pd, dd, f,df,df2,x0,tol,n):
         archivo.write(tabla_formateada + "\n")
   
 
-def secante(f, p_0, p_1, tol, n):
+def secante(fn, f, p_0, p_1, tol, n):
+    p0 = p_0
+    p1 = p_1
     if p_0==p_1:
         st.error("X0 no puede ser igual a X1", icon="🚨")
         return None
@@ -320,11 +322,19 @@ def secante(f, p_0, p_1, tol, n):
         p_1 = p_2
         
         i+=1
+        
+    if i < n:
+        st.write('Aproximación de la raíz encontrada en x = ', p_2)
     if i > n:
         st.write("Solución no encontrada para la tolerancia de:" , tol,"--- Iteraciones Usadas:", i-1)
     st.write(tabulate(resultados, headers=["Iteraciones", "Xi", "f(xi)", "Error"], tablefmt="github",floatfmt=(".10f",".10f")))
-    if i < n:
-        st.write('Aproximación de la raíz encontrada en x = ', p_2)
+    
+    tabla_formateada = tabulate(resultados, headers=["Iteraciones", "Xi", "f(xi)", "Error"], tablefmt="github",floatfmt=(".10f",".10f"))
+    
+    with open ('resultados.txt', 'a') as archivo:
+        archivo.write(f"\n\n\nResultados del metodo de la secante para la funcion {fn} con un intervalo de {p0} a {p1}, con una tolerancia de {tol}\n\n")
+        archivo.write(tabla_formateada + "\n")
+    
 
 #Métodos de capitulo 2
 
@@ -1443,11 +1453,11 @@ elif metodo_seleccionado_capitulo1 == 'Secante':
     
     input_function = st.text_input('Digite la función a evaluar')
     function_name = st.latex(input_function.replace('(', '{').replace(')', '}'))
-    interval_a = st.number_input('Digite el valor inicial (x0)', min_value=-500.0, max_value=500.0, step=0.5)
-    interval_b = st.number_input('Digite el valor inicial (x1)', min_value=-500, max_value=500, step=1)
+    interval_a = st.number_input('Digite el valor inicial (x0)', min_value=-500.0, max_value=500.0, step=0.5, value=-5.0)
+    interval_b = st.number_input('Digite el valor inicial (x1)', min_value=-500.0, max_value=500.0, step=0.5, value=5.0)
     tolerance = st.text_input('Digite la tolerancia',value=1e-7)
     valor = float(tolerance)
-    max_iterations = st.number_input('Digite la iteración máxima', min_value=1, step=1)
+    max_iterations = st.number_input('Digite la iteración máxima', min_value=1, step=1, value=100)
     expr_with_numpy = reemplazar_funciones_matematicas(input_function)
     st.text(expr_with_numpy) 
     if expr_with_numpy:
@@ -1623,23 +1633,30 @@ if metodo_seleccionado_capitulo1 != '':
     if st.button('Consultar'):
         if metodo_seleccionado_capitulo1 == 'Bisección':
             bisection(input_function, func,interval_a,interval_b,valor,max_iterations)
+            
         elif metodo_seleccionado_capitulo1 == 'Punto Fijo':
             fixed_point(input_function_f, input_function_g, initial_value,valor,max_iterations)
+            
         elif metodo_seleccionado_capitulo1 == 'Regla Falsa':
             false_position(input_function, func,interval_a,interval_b,valor,max_iterations)
+            
         elif metodo_seleccionado_capitulo1 == 'Newton':
             newton(input_function_f, input_function_df, func_f,func_df,initial_value,valor,max_iterations)
+            
         elif metodo_seleccionado_capitulo1 == 'Raices Multiples':
             multiple_roots(input_function_f, input_function_df, input_function_df2, func_f,func_df,func_df2,initial_value,valor,max_iterations)
+        
         elif metodo_seleccionado_capitulo1 == 'Secante':
-            secante(func,interval_a,interval_b,valor,max_iterations)
+            secante(input_function, func,interval_a,interval_b,valor,max_iterations)
 
 elif metodo_seleccionado_capitulo2 != '' :
     if st.button('Consultar'):
         if metodo_seleccionado_capitulo2 == 'Jacobi':
             JacobiSeidel(A_matrix_entry, row_b, row_x0, valor, Niter, 0)
+            
         elif metodo_seleccionado_capitulo2 == 'Gauss':
             JacobiSeidel(A_matrix_entry, row_b, row_x0, valor, Niter, 1)
+            
         elif metodo_seleccionado_capitulo2 == 'Sor':
             sor_method(A_matrix_entry, row_b, row_x0, valor, Niter, W)
 
@@ -1647,11 +1664,14 @@ elif metodo_seleccionado_capitulo3 != '' :
     if st.button('Consultar'):
         if metodo_seleccionado_capitulo3 == 'Vandermonde':
             vandermonde(x,y)
+            
         elif metodo_seleccionado_capitulo3 == 'Newton':
             diferencias_divididas(x,y)
+            
         elif metodo_seleccionado_capitulo3 == 'Spline':
             if spline == 'Lineal':
                 Spline(x, y, 1)
+                
             elif spline == 'Cubica':
                 Spline(x, y, 3)
        
