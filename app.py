@@ -100,8 +100,10 @@ def df2(x):
   return (func_df2(x))
 
 #Metodo bisection
-def bisection(f,a,b,tol,n):
+def bisection(fn, f,a,b,tol,n):
     resultados=[]
+    ai = a
+    bi = b
     if f(a)*f(b)>=0:
         st.error("Error mismo intervalo", icon="🚨")
         return None
@@ -140,6 +142,16 @@ def bisection(f,a,b,tol,n):
     # st.dataframe(df)
     st.write(tabulate(resultados, headers=["Iteraciones", "a", "xm", "b", "f(xm)", "Error"], tablefmt="github", floatfmt=(".0f",".10f",".10f",".10f")))
 
+        
+    # Convertir la tabla a una cadena formateada
+    tabla_formateada = tabulate(resultados, headers=["Iteraciones", "a", "xm", "b", "f(xm)", "Error"], tablefmt="github", floatfmt=(".0f", ".10f", ".10f", ".10f"))
+
+    # Escribir la tabla formateada en un archivo .txt
+    with open('resultados.txt', 'a') as archivo:
+        # archivo.write("\n\n\nResultados del metodo de la biseccion\n\n")
+        archivo.write(f"\n\n\nResultados del metodo de la biseccion para la funcion {fn} del intervalo {ai} a {bi}, con una tolerancia de {tol}\n\n")
+        archivo.write(tabla_formateada + "\n")
+
 
             
 def plot_function(func):
@@ -148,24 +160,38 @@ def plot_function(func):
     return x, y
 
 #Metodo Punto Fijo
-def fixed_point(x0, tol, itermax): 
+def fixed_point(fx, gx, x0, tol, itermax): 
+    x0i = x0
     iter = 0
     resultados = [[iter, x0,  g(x0), f1(x0), "NA"]]
     while iter <= itermax:
         x1 = g(x0)  # evaluar la función en el último punto
         error = abs(x1-x0)
+        # error = abs((x1-x0)/x1) # error relativo
         x0 = x1
         iter += 1
         resultados.append([iter,x0,g(x0), f1(x0), error])
         if error < tol:  # parar al alcanzar la tolerancia indicada
+            st.write("Solución encontrada en x=", x1, " en ", iter, " iteraciones")
             break
     if iter > itermax:
         st.write("Solución no encontrada, iteraciones utilizadas: ", iter)
 
     st.write(tabulate(resultados, headers=["Iteraciones", "Xi", "g(xi)", "f(x)", "Error"], tablefmt="github", floatfmt=(".10f",".10f",".10f")))
+    
+     # Convertir la tabla a una cadena formateada
+    tabla_formateada = tabulate(resultados, headers=["Iteraciones", "Xi", "g(xi)", "f(x)", "Error"], tablefmt="github", floatfmt=(".10f",".10f",".10f"))
+
+    # Escribir la tabla formateada en un archivo .txt
+    with open('resultados.txt', 'a') as archivo:
+        archivo.write(f"\n\n\nResultados del metodo de punto fijo para la funcion F {fx} y G {gx} con un punto inicial de {x0i}, con una tolerancia de {tol}\n\n")
+        archivo.write(tabla_formateada + "\n")
+    
 
 #Regla falsa
-def false_position(f,a,b,tol,n):
+def false_position(fn, f,a,b,tol,n):
+    ai = a
+    bi = b
     resultados=[]
     if f(a)*f(b)>=0:
         st.error("Error mismo intervalo", icon="🚨")
@@ -187,12 +213,23 @@ def false_position(f,a,b,tol,n):
             a = c_1
         c = a - (f(a)*(b-a))/(f(b)-f(a))
         if e_abs < tol:
+            st.write("Solución encontrada en x=", c_1, " en ", i, " iteraciones")
             break
         e_abs = abs(c_1 - c)
         i += 1
     if i > n:
         st.write("Solución no encontrada para la tolerancia de:" , tol,"--- Iteraciones Utilizadas:", i-1)
     st.write(tabulate(resultados, headers=["Iteraciones", "a", "b", "xm", "f(m)", "Error"], tablefmt="github", floatfmt=(".0f",".10f",".10f",".10f")))
+
+
+    tabla_formateada = tabulate(resultados, headers=["Iteraciones", "a", "b", "xm", "f(m)", "Error"], tablefmt="github", floatfmt=(".0f",".10f",".10f",".10f"))
+
+
+    with open('resultados.txt', 'a') as archivo:
+        archivo.write(f"\n\n\nResultados del metodo de la regla falsa para la funcion {fn} del intervalo {ai} a {bi}, con una tolerancia de {tol}\n\n")
+        archivo.write(tabla_formateada + "\n")
+
+
 
 #Newton
 def newton(f, df, p_0, tol, n):
@@ -723,7 +760,8 @@ elif metodo_seleccionado_capitulo1 == 'Punto Fijo':
     function_name_g = st.latex(input_function_g)
     st.info("""Asegurese que:\n
             F(x) sea continua en el intervalo 
-    G(x) sea continua en el intervalo""", icon="ℹ️")
+    G(x) sea continua en el intervalo
+    F(x) = 0 y G(x) = x""", icon="ℹ️")
     
     initial_value = st.number_input('Digite el valor inicial X0', min_value=-500.0, max_value=500.0, step=0.5, value=20.0, format="%.2f")
     tolerance = st.text_input('Digite la tolerancia',value=0.5e-5)
@@ -1252,11 +1290,11 @@ elif metodo_seleccionado_capitulo3 == 'Spline':
 if metodo_seleccionado_capitulo1 != '':
     if st.button('Consultar'):
         if metodo_seleccionado_capitulo1 == 'Bisección':
-            bisection(func,interval_a,interval_b,valor,max_iterations)
+            bisection(input_function, func,interval_a,interval_b,valor,max_iterations)
         elif metodo_seleccionado_capitulo1 == 'Punto Fijo':
-            fixed_point(initial_value,valor,max_iterations)
+            fixed_point(input_function_f, input_function_g, initial_value,valor,max_iterations)
         elif metodo_seleccionado_capitulo1 == 'Regla Falsa':
-            false_position(func,interval_a,interval_b,valor,max_iterations)
+            false_position(input_function, func,interval_a,interval_b,valor,max_iterations)
         elif metodo_seleccionado_capitulo1 == 'Newton':
             newton(func_f,func_df,initial_value,valor,max_iterations)
         elif metodo_seleccionado_capitulo1 == 'Raices Multiples':
