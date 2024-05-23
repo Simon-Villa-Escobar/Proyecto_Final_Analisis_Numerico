@@ -395,7 +395,7 @@ def JacobiSeidel(A,b,x0,Tol,Niter,method):
         if method == 0:
             archivo.write(f"\n\n\nResultados del metodo de Jacobi con la matriz A: \n{A}\nb: \n{b}\nx0:\n{x0i}\n \n\n")
         elif method == 1:
-            archivo.write(f"\n\n\nResultados del metodo de Gauss-Seidel con la matriz A: \n{A}\nb: \n{b}\nx0:\n{x0i}\n \n\n\n\n")
+            archivo.write(f"\n\n\nResultados del metodo de Gauss-Seidel con la matriz A: \n{A}\n\nb: \n{b}\n\nx0:\n{x0i}\n \n\n\n\n")
         archivo.write(tabulate(tabla, headers=["Iteraciones", "x1", "x2", "x3", "Error"], tablefmt="github", floatfmt=".8f") + "\n")
     
     
@@ -448,7 +448,7 @@ def sor_method(A,b,x0,Tol,Niter,w):
     st.write(df, floatfmt=".8f", tablefmt="grid")
     
     with open('resultados.txt', 'a') as archivo:
-        archivo.write(f"\n\n\nResultados del metodo de SOR con la matriz A: \n{A}\nb: \n{b}\nx0:\n{x0i}\nw:\n{w}\n \n\n")
+        archivo.write(f"\n\n\nResultados del metodo de SOR con la matriz A: \n{A}\n\nb: \n{b}\n\nx0:\n{x0i}\n\nw:\n{w}\n \n\n")
         archivo.write(tabulate(tabla, headers=["Iteraciones", "x1", "x2", "x3", "Error"], tablefmt="github", floatfmt=".8f") + "\n")
         
         
@@ -507,9 +507,9 @@ def vandermonde(x,y):
     
     with open('resultados.txt', 'a') as archivo:
         archivo.write("\n\n\nResultados del metodo de Vandermonde\n\n")
-        archivo.write(f"Matriz de Vandermonde: \n{vander}\n")
-        archivo.write(f"Coeficientes: \n{coeficiente}\n")
-        archivo.write(f"Polinomio de Vandermonde: \n{polinomio}\n")
+        archivo.write(f"Matriz de Vandermonde: \n\n{vander}\n\n")
+        archivo.write(f"Coeficientes: \n\n{coeficiente}\n\n")
+        archivo.write(f"Polinomio de Vandermonde: \n\n{polinomio}\n\n")
         
 
 #Newton
@@ -567,6 +567,12 @@ def diferencias_divididas(Xi,y):
     plt.grid(True)
     # plt.show()
     st.pyplot()
+    
+    with open ('resultados.txt', 'a') as archivo:
+        archivo.write("\n\n\nResultados del metodo de Diferencias Divididas de Newton\n\n")
+        archivo.write(f"Tabla de Diferencias Divididas: \n\n{df}\n\n")
+        archivo.write(f"Coeficientes: \n\n{coeficientes}\n\n")
+        archivo.write(f"Polinomio de Diferencias Divididas de Newton: \n\n{polinomio_imprimir}\n\n")
 
 
 def Spline(xi, fi, d):
@@ -678,7 +684,7 @@ def graficar(n, arreglo, xi, fi, grado):
 #Streamlit
 options_cap1= ['Bisección', 'Punto Fijo', 'Regla Falsa', 'Newton', 'Raices Multiples', 'Secante']
 options_cap2= ['Jacobi', 'Gauss', 'Sor']
-options_cap3= ['Vandermonde', 'Spline', 'Newton']
+options_cap3= ['Vandermonde', 'Newton']
 options_spline =['Lineal', 'Cubica']
 
 
