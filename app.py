@@ -338,8 +338,9 @@ def secante(fn, f, p_0, p_1, tol, n):
 
 #Métodos de capitulo 2
 
-#Jacobi
+# Jacobi
 def JacobiSeidel(A,b,x0,Tol,Niter,method):
+    x0i = x0
     c = 0
     error = Tol+1
     D = np.diag(np.diag(A))
@@ -382,10 +383,32 @@ def JacobiSeidel(A,b,x0,Tol,Niter,method):
     tabla.append([c] + list(x0) + [E]) 
     df = pd.DataFrame(tabla, columns=['Iteración', 'x1', 'x2', 'x3', 'Error'])
     st.write(df, floatfmt=".8f", tablefmt="grid")
+    
+    # with open ('resultados.txt', 'a') as archivo:
+    #     archivo.write("\n\nResultados del metodo de Jacobi\n\n")
+        
+    
+    
+    # df.to_csv('resultados.txt', mode='a', header=True, index=False, sep='\t', float_format='%.8f')
+    
+    with open('resultados.txt', 'a') as archivo:
+        if method == 0:
+            archivo.write(f"\n\n\nResultados del metodo de Jacobi con la matriz A: \n{A}\nb: \n{b}\nx0:\n{x0i}\n \n\n")
+        elif method == 1:
+            archivo.write(f"\n\n\nResultados del metodo de Gauss-Seidel con la matriz A: \n{A}\nb: \n{b}\nx0:\n{x0i}\n \n\n\n\n")
+        archivo.write(tabulate(tabla, headers=["Iteraciones", "x1", "x2", "x3", "Error"], tablefmt="github", floatfmt=".8f") + "\n")
+    
+    
+    
     return (E,s)
+
+
+
+
 
 #Sor
 def sor_method(A,b,x0,Tol,Niter,w):
+    x0i = x0
     c=0
     error = Tol+1
     D = np.diag(np.diag(A))
@@ -423,6 +446,13 @@ def sor_method(A,b,x0,Tol,Niter,w):
     tabla.append([c] + list(x0) + [E]) 
     df = pd.DataFrame(tabla, columns=['Iteración', 'x1', 'x2', 'x3', 'Error'])
     st.write(df, floatfmt=".8f", tablefmt="grid")
+    
+    with open('resultados.txt', 'a') as archivo:
+        archivo.write(f"\n\n\nResultados del metodo de SOR con la matriz A: \n{A}\nb: \n{b}\nx0:\n{x0i}\nw:\n{w}\n \n\n")
+        archivo.write(tabulate(tabla, headers=["Iteraciones", "x1", "x2", "x3", "Error"], tablefmt="github", floatfmt=".8f") + "\n")
+        
+        
+        
     return (E,s)
 
 
@@ -474,6 +504,12 @@ def vandermonde(x,y):
     plt.grid(True)
     # plt.show()
     st.pyplot()
+    
+    with open('resultados.txt', 'a') as archivo:
+        archivo.write("\n\n\nResultados del metodo de Vandermonde\n\n")
+        archivo.write(f"Matriz de Vandermonde: \n{vander}\n")
+        archivo.write(f"Coeficientes: \n{coeficiente}\n")
+        archivo.write(f"Polinomio de Vandermonde: \n{polinomio}\n")
         
 
 #Newton
@@ -726,24 +762,7 @@ if metodo_seleccionado_capitulo1 == 'Bisección':
         # Mostrar el gráfico en Streamlit
         st.pyplot(fig)
     
-    # st.write("")
-    # st.write("")
-    # st.write("")
-    # st.write("")
-    # st.write("")
-    # st.write("")
-    # st.write("")
-    # st.write("")
-    # st.write("")
-        
-    # st.write("Paso 1 del Método de Bisección:")
-    # st.write("Calcular el punto medio del intervalo:")
-    # st.latex(r'   c = \frac{a + b}{2}')
-    # st.write("Evaluar la función en el punto medio:")
-    # st.write("   Si f(c) > 0:")
-    # st.write("      - c se convierte en el nuevo valor de b")
-    # st.write("   Si f(c) < 0:")
-    # st.write("      - c se convierte en el nuevo valor de a")
+
 
 
 #Punto Fijo
@@ -908,99 +927,6 @@ elif metodo_seleccionado_capitulo1 == 'Regla Falsa':
         # Mostrar el gráfico en Streamlit
         st.pyplot(fig)
 
-# #Newton
-# elif metodo_seleccionado_capitulo1 == 'Newton':
-#     st.header("Método de Newton")
-    
-#     st.write("")
-#     st.write("")
-#     st.write("")
-#     st.write("")
-#     st.write("------------------------------------------------")
-#     st.write("")
-#     st.write("")
-#     st.write("")
-#     st.write("")
-    
-#     st.write("Paso 1 del Método de Newton:")
-#     st.write("Calcular el siguiente punto usando la pendiente de la tangente:")
-#     st.latex(r'   x_{i+1} = x_i - \frac{f(x_i)}{f\'(x_i)}')
-    
-#     st.write("")
-#     st.write("")
-#     st.write("")
-#     st.write("")
-#     st.write("------------------------------------------------")
-#     st.write("")
-#     st.write("")
-#     st.write("")
-#     st.write("")
-    
-#     input_function_f = st.text_input('Digite la función f a evaluar')
-#     st.info("""Debe asegurarse que:\n
-#             F(x) sea continua en el intervalo
-#     F'(x) no sea igual a cero en ninguno de los puntos del intervalo que se analiza""", icon="ℹ️")
-#     function_name_f = st.latex(input_function_f)
-#     input_function_df = st.text_input('Digite la función df a evaluar')
-#     function_name_df = st.latex(input_function_df)
-#     initial_value = st.number_input('Digite el valor inicial X0', min_value=-500.0, max_value=500.0, step=0.5, value=5.0, format="%.2f")
-#     tolerance = st.text_input('Digite la tolerancia',value=0.5e-5)
-#     valor = float(tolerance)
-#     max_iterations = st.number_input('Digite la iteración máxima', min_value=1, step=1, value=100)
-#     expr_with_numpy_f = reemplazar_funciones_matematicas(input_function_f)
-#     st.text(expr_with_numpy_f)
-#     expr_with_numpy_df = reemplazar_funciones_matematicas(input_function_df)
-#     st.text(expr_with_numpy_df)
-#     if expr_with_numpy_f:
-#         func_f = eval(f"lambda x: {expr_with_numpy_f}") # Convertir string a función
-
-#     if expr_with_numpy_df:
-#         func_df = eval(f"lambda x: {expr_with_numpy_df}") # Convertir string a función
-#     if st.button('Graficar f(x)'):
-#         # Procesar la función ingresada por el usuario
-#         x = np.linspace(-8, 8, 1000)
-#         y = eval(expr_with_numpy_f)  # Evaluar la expresión matemática
-
-#         # Crear el gráfico con tamaño ajustado
-#         fig, ax = plt.subplots(figsize=(8, 6))  # Ajustar el tamaño de la figura aquí
-#         ax.plot(x, y, color='red', label='Función')
-#         ax.axhline(0, color='black', linestyle='-', linewidth=1)
-#         ax.axvline(0, color='black', linestyle='-', linewidth=1)
-#         ax.set_xlabel("x")
-#         ax.set_ylabel("f(x)")
-#         ax.set_title(f"Gráfico de la Función: {input_function_f}")
-#         ax.legend()
-#         ax.grid(True)
-
-#         # Mostrar el gráfico en Streamlit
-#         st.pyplot(fig)
-#     if st.button("Graficar f'(x)"):
-#         # Procesar la función ingresada por el usuario
-#         x = np.linspace(-8, 8, 1000)
-#         y = eval(expr_with_numpy_df)  # Evaluar la expresión matemática
-
-#         # Crear el gráfico con tamaño ajustado
-#         fig, ax = plt.subplots(figsize=(8, 6))  # Ajustar el tamaño de la figura aquí
-#         ax.plot(x, y, color='red', label='Función')
-#         ax.axhline(0, color='black', linestyle='-', linewidth=1)
-#         ax.axvline(0, color='black', linestyle='-', linewidth=1)
-#         ax.set_xlabel("x")
-#         ax.set_ylabel("f(x)")
-#         ax.set_title(f"Gráfico de la Función: {input_function_df}")
-#         ax.legend()
-#         ax.grid(True)
-
-#         # Mostrar el gráfico en Streamlit
-#         st.pyplot(fig)
-
-
-
-
-
-
-
-
-
 
 # Sección del Método de Newton
 if metodo_seleccionado_capitulo1 == 'Newton':
@@ -1116,140 +1042,6 @@ if metodo_seleccionado_capitulo1 == 'Newton':
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# #Raices Multiples
-# elif metodo_seleccionado_capitulo1 == 'Raices Multiples':
-#     st.header("Método de Raices Multiples (Newton modificado 2)")
-   
-#     st.write("")
-#     st.write("")
-#     st.write("")
-#     st.write("")
-#     st.write("------------------------------------------------")
-#     st.write("")
-#     st.write("")
-#     st.write("")
-#     st.write("")
-     
-#     st.write("Paso 1 del Método de Newton Modificado:")
-#     st.write("Calcular el siguiente punto usando la siguiente formula:")
-#     st.latex(r' x_{n+1} = x_n - \frac{f(x_n)*f\'(n)}{(f\'(n))^2 - f(x_n)*f\"(n)}')
-    
-#     st.write("")
-#     st.write("")
-#     st.write("")
-#     st.write("")
-#     st.write("------------------------------------------------")
-#     st.write("")
-#     st.write("")
-#     st.write("")
-#     st.write("")    
-    
-#     # st.info('Debe asegurarse que f(x) sea continua para el intervalo y que la derivada y la segunda derivada esten correctas', icon="ℹ️")
-#     input_function_f = st.text_input('Digite la función f a evaluar')
-#     function_name_f = st.latex(input_function_f)
-#     st.info("""Debe asegurarse que:\n
-#             F(x) sea continua en el intervalo
-#     F'(x) y F''(x) no sean iguales a cero en un mismo punto del intervalo""", icon="ℹ️")
-#     input_function_df = st.text_input('Digite la función df a evaluar')
-#     function_name_df = st.latex(input_function_df)
-#     input_function_df2 = st.text_input('Digite la función df2 a evaluar')
-#     function_name_df2 = st.latex(input_function_df2)
-#     initial_value = st.number_input('Digite el valor inicial X0', min_value=-500, max_value=500, step=1, value=5)
-#     tolerance = st.text_input('Digite la tolerancia',value=0.5e-5)
-#     valor = float(tolerance)
-#     max_iterations = st.number_input('Digite la iteración máxima', min_value=1, step=1, value=100)
-#     expr_with_numpy_f = reemplazar_funciones_matematicas(input_function_f)
-#     st.text(expr_with_numpy_f)
-#     expr_with_numpy_df = reemplazar_funciones_matematicas(input_function_df)
-#     st.text(expr_with_numpy_df)
-#     expr_with_numpy_df2 = reemplazar_funciones_matematicas(input_function_df2)
-#     st.text(expr_with_numpy_df2)
-#     if expr_with_numpy_f:
-#         func_f = eval(f"lambda x: {expr_with_numpy_f}") # Convertir string a función
-
-#     if expr_with_numpy_df:
-#         func_df = eval(f"lambda x: {expr_with_numpy_df}") # Convertir string a función
-
-#     if expr_with_numpy_df2:
-#         func_df2 = eval(f"lambda x: {expr_with_numpy_df2}") # Convertir string a función
-#     if st.button('Graficar f(x)'):
-#         # Procesar la función ingresada por el usuario
-#         x = np.linspace(-8, 8, 1000)
-#         y = eval(expr_with_numpy_f)  # Evaluar la expresión matemática
-
-#         # Crear el gráfico con tamaño ajustado
-#         fig, ax = plt.subplots(figsize=(8, 6))  # Ajustar el tamaño de la figura aquí
-#         ax.plot(x, y, color='red', label='Función')
-#         ax.axhline(0, color='black', linestyle='-', linewidth=1)
-#         ax.axvline(0, color='black', linestyle='-', linewidth=1)
-#         ax.set_xlabel("x")
-#         ax.set_ylabel("f(x)")
-#         ax.set_title(f"Gráfico de la Función: {input_function_f}")
-#         ax.legend()
-#         ax.grid(True)
-
-#         # Mostrar el gráfico en Streamlit
-#         st.pyplot(fig)
-#     if st.button("Graficar f'(x)"):
-#         # Procesar la función ingresada por el usuario
-#         x = np.linspace(-8, 8, 1000)
-#         y = eval(expr_with_numpy_df)  # Evaluar la expresión matemática
-
-#         # Crear el gráfico con tamaño ajustado
-#         fig, ax = plt.subplots(figsize=(8, 6))  # Ajustar el tamaño de la figura aquí
-#         ax.plot(x, y, color='red', label='Función')
-#         ax.axhline(0, color='black', linestyle='-', linewidth=1)
-#         ax.axvline(0, color='black', linestyle='-', linewidth=1)
-#         ax.set_xlabel("x")
-#         ax.set_ylabel("f(x)")
-#         ax.set_title(f"Gráfico de la Función: {input_function_df}")
-#         ax.legend()
-#         ax.grid(True)
-
-#         # Mostrar el gráfico en Streamlit
-#         st.pyplot(fig)
-#     if st.button("Graficar f''(x)"):
-#         # Procesar la función ingresada por el usuario
-#         x = np.linspace(-8, 8, 1000)
-#         y = eval(expr_with_numpy_df2)  # Evaluar la expresión matemática
-
-#         # Crear el gráfico con tamaño ajustado
-#         fig, ax = plt.subplots(figsize=(8, 6))  # Ajustar el tamaño de la figura aquí
-#         ax.plot(x, y, color='red', label='Función')
-#         ax.axhline(0, color='black', linestyle='-', linewidth=1)
-#         ax.axvline(0, color='black', linestyle='-', linewidth=1)
-#         ax.set_xlabel("x")
-#         ax.set_ylabel("f(x)")
-#         ax.set_title(f"Gráfico de la Función: {input_function_df2}")
-#         ax.legend()
-#         ax.grid(True)
-
-#         # Mostrar el gráfico en Streamlit
-#         st.pyplot(fig)
-
-
-
-
-
-
-
 if metodo_seleccionado_capitulo1 == 'Raices Multiples':
     st.header("Método de Raices Multiples (Newton modificado 2)")
    
@@ -1295,18 +1087,26 @@ if metodo_seleccionado_capitulo1 == 'Raices Multiples':
             st.latex(f"f(x) = {sym.latex(function_f)}")
 
             # Mostrar las derivadas en formato LaTeX dentro de st.info
-            st.info(f"La derivada primera de la función f es: f'(x) = {sym.latex(df_function)}")
-            st.info(f"La derivada segunda de la función f es: f''(x) = {sym.latex(df2_function)}")
+            # st.info(f"La derivada primera de la función f es: f'(x) = {sym.latex(df_function)}")
+            # st.info(f"La derivada segunda de la función f es: f''(x) = {sym.latex(df2_function)}")
 
             # Mostrar las derivadas en cuadros de texto
             input_function_df = st.text_input('Digite la función df a evaluar', value=str(df_function))
-            input_function_df2 = st.text_input('Digite la función df2 a evaluar', value=str(df2_function))
-
             function_df = sym.sympify(input_function_df)
-            function_df2 = sym.sympify(input_function_df2)
-            
             st.latex(f"f'(x) = {sym.latex(function_df)}")
+            
+            
+            input_function_df2 = st.text_input('Digite la función df2 a evaluar', value=str(df2_function))
+            function_df2 = sym.sympify(input_function_df2)
             st.latex(f"f''(x) = {sym.latex(function_df2)}")
+            
+            
+
+            # function_df = sym.sympify(input_function_df)
+            # function_df2 = sym.sympify(input_function_df2)
+            
+            # st.latex(f"f'(x) = {sym.latex(function_df)}")
+            # st.latex(f"f''(x) = {sym.latex(function_df2)}")
 
             # Pedir el valor inicial, la tolerancia y el número máximo de iteraciones
             initial_value = st.number_input('Digite el valor inicial X0', min_value=-500.0, max_value=500.0, step=1.0, value=5.0)
@@ -1388,36 +1188,6 @@ if metodo_seleccionado_capitulo1 == 'Raices Multiples':
 
         except sym.SympifyError as e:
             st.error(f"Error al parsear la función ingresada: {e}")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
