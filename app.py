@@ -125,6 +125,10 @@ def bisection(fn, f,a,b,tol,n):
             a = c
             c_t = b
         e_abs = abs(c_t - c)
+        # if c_t != 0:
+        #     e_abs = abs(c_t - c) / abs(c_t) # Error relativo con la división
+        # else:
+        #     e_abs = abs(c_t - c)
         if(i!=1):
             resultados.append([i,a,c,b,f(c),e_abs])
         else:
@@ -166,8 +170,11 @@ def fixed_point(fx, gx, x0, tol, itermax):
     resultados = [[iter, x0,  g(x0), f1(x0), "NA"]]
     while iter <= itermax:
         x1 = g(x0)  # evaluar la función en el último punto
-        error = abs(x1-x0)
-        # error = abs((x1-x0)/x1) # error relativo
+        # error = abs(x1-x0)
+        if x1 != 0:
+            error = abs(x1-x0) / abs(x1) # error relativo con la división
+        else:
+            error = abs(x1-x0)
         x0 = x1
         iter += 1
         resultados.append([iter,x0,g(x0), f1(x0), error])
@@ -199,7 +206,11 @@ def false_position(fn, f,a,b,tol,n):
     elif a>b:
         st.error("Error A no puede ser mayor a B", icon="🚨")
         return None 
-    e_abs = abs(b-a)
+    # e_abs = abs(b-a)
+    if b != 0:
+        e_abs = abs(b-a) / abs(b) # Error relativo con la división
+    else:
+        e_abs = abs(b-a)
     i = 1
     c = a - (f(a)*(b-a))/(f(b)-f(a))
     while i <= n:
@@ -244,7 +255,11 @@ def newton(fn, dfi, f, df, p_0, tol, n):
             break
             
         p_1 = p_0 - (f(p_0))/(df(p_0)) #Fórmula del Método
-        e_abs = abs(p_1 - p_0)
+        # e_abs = abs(p_1 - p_0)
+        if p_1 != 0:
+            e_abs = abs(p_1 - p_0) / abs(p_1) # Error relativo con la división
+        else:
+            e_abs = abs(p_1 - p_0)
         resultados.append([i,p_1,f(p_1),e_abs])
         if e_abs < tol: #Criterio de Parada
             st.write("Solución encontrada en x = ", p_1, "--- En ", i, " iteraciones")
@@ -274,7 +289,11 @@ def multiple_roots(sd, pd, dd, f,df,df2,x0,tol,n):
     while iteration<=n:
         xact = xant - fant * df(xant) / ((df(xant))**2 - fant * df2(xant))
         fact = f(xact)
-        e_abs = abs(xact-xant)
+        # e_abs = abs(xact-xant)
+        if xact != 0:
+            e_abs = abs(xact - xant) / abs(xact) # Error relativo con la división
+        else:
+            e_abs = abs(xact - xant)
         iteration += 1
         xant = xact
         fant = fact
@@ -302,7 +321,11 @@ def secante(fn, f, p_0, p_1, tol, n):
     if p_0==p_1:
         st.error("X0 no puede ser igual a X1", icon="🚨")
         return None
-    e_abs = abs(p_1 - p_0)
+    # e_abs = abs(p_1 - p_0)
+    if p_1 != 0:
+        e_abs = abs(p_1 - p_0) / abs(p_1) # Error relativo con la división
+    else:
+        e_abs = abs(p_1 - p_0)
     i = 2
     resultados =[[0,p_0,f(p_0),""]]
     resultados.append([1,p_1,f(p_1),""])
@@ -339,95 +362,286 @@ def secante(fn, f, p_0, p_1, tol, n):
 #Métodos de capitulo 2
 
 # Jacobi
-def JacobiSeidel(A,b,x0,Tol,Niter,method):
-    x0i = x0
+# def JacobiSeidel(A,b,x0,Tol,Niter,method):
+#     x0i = x0
+#     c = 0
+#     error = Tol+1
+#     D = np.diag(np.diag(A))
+#     L = -np.tril(A, -1)
+#     U = -np.triu(A, 1)
+#     tabla = []
+#     while error > Tol and c < Niter:
+#         if method == 0:
+#             T = np.linalg.inv(D)@(L+U)
+#             C = np.linalg.inv(D)@b
+#             x1 = T@x0+C
+#         if method == 1:
+#             T = np.linalg.inv(D-L)@U
+#             C = np.linalg.inv(D-L)@b
+#             x1 = T@x0+C
+#         E = (np.linalg.norm(x1-x0, ord=np.inf))/(np.linalg.norm(x1, ord=np.inf)) # Con la división si se piden cifras significativas, si no, se quita
+#         error = E
+#         if c==0:
+#             tabla.append([c] + list(x0) + [0])
+#         else:
+#             tabla.append([c] + list(x0) + [E_anterior])
+#         x0 = x1
+#         c += 1
+#         E_anterior = E
+#     if error < Tol:
+#         s = x0
+#         eigenvalores = np.linalg.eigvals(T)
+#         max_eig = np.max(np.abs(eigenvalores))
+#         st.write("Matriz T: ")
+#         st.write(T)
+#         st.write("")
+#         st.write(f"Eigenvalues: {max_eig}")
+#         st.write("")
+#         st.write(f"La aproximación de la solución del sistema con una tolerancia = {Tol} es: ")
+#         st.write(s)
+#     else:
+#         s = x0
+#         st.error(f"Fracasó en {Niter} iteraciones", icon="🚨")
+
+#     tabla.append([c] + list(x0) + [E]) 
+#     df = pd.DataFrame(tabla, columns=['Iteración', 'x1', 'x2', 'x3', 'Error'])
+#     st.write(df, floatfmt=".8f", tablefmt="grid")
+    
+#     # with open ('resultados.txt', 'a') as archivo:
+#     #     archivo.write("\n\nResultados del metodo de Jacobi\n\n")
+        
+    
+    
+#     # df.to_csv('resultados.txt', mode='a', header=True, index=False, sep='\t', float_format='%.8f')
+    
+#     with open('resultados.txt', 'a') as archivo:
+#         if method == 0:
+#             archivo.write(f"\n\n\nResultados del metodo de Jacobi con la matriz A: \n{A}\nb: \n{b}\nx0:\n{x0i}\n \n\n")
+#         elif method == 1:
+#             archivo.write(f"\n\n\nResultados del metodo de Gauss-Seidel con la matriz A: \n{A}\n\nb: \n{b}\n\nx0:\n{x0i}\n \n\n\n\n")
+#         archivo.write(tabulate(tabla, headers=["Iteraciones", "x1", "x2", "x3", "Error"], tablefmt="github", floatfmt=".8f") + "\n")
+    
+    
+    
+#     return (E,s)
+
+
+
+
+
+
+
+
+
+def JacobiSeidel(A, b, x0, Tol, Niter, method):
+    x0i = x0.copy()
     c = 0
-    error = Tol+1
+    error = Tol + 1
     D = np.diag(np.diag(A))
     L = -np.tril(A, -1)
     U = -np.triu(A, 1)
     tabla = []
+    errors = []
+    solutions = {i: [x0[i]] for i in range(len(x0))}
+    
     while error > Tol and c < Niter:
         if method == 0:
-            T = np.linalg.inv(D)@(L+U)
-            C = np.linalg.inv(D)@b
-            x1 = T@x0+C
-        if method == 1:
-            T = np.linalg.inv(D-L)@U
-            C = np.linalg.inv(D-L)@b
-            x1 = T@x0+C
-        E = (np.linalg.norm(x1-x0, ord=np.inf))/(np.linalg.norm(x1, ord=np.inf)) # Con la división si se piden cifras significativas, si no, se quita
-        error = E
-        if c==0:
-            tabla.append([c] + list(x0) + [0])
-        else:
-            tabla.append([c] + list(x0) + [E_anterior])
-        x0 = x1
-        c += 1
-        E_anterior = E
-    if error < Tol:
-        s = x0
-        eigenvalores = np.linalg.eigvals(T)
-        max_eig = np.max(np.abs(eigenvalores))
-        st.write("Matriz T: ")
-        st.write(T)
-        st.write("")
-        st.write(f"Eigenvalues: {max_eig}")
-        st.write("")
-        st.write(f"La aproximación de la solución del sistema con una tolerancia = {Tol} es: ")
-        st.write(s)
-    else:
-        s = x0
-        st.error(f"Fracasó en {Niter} iteraciones", icon="🚨")
-
-    tabla.append([c] + list(x0) + [E]) 
-    df = pd.DataFrame(tabla, columns=['Iteración', 'x1', 'x2', 'x3', 'Error'])
-    st.write(df, floatfmt=".8f", tablefmt="grid")
-    
-    # with open ('resultados.txt', 'a') as archivo:
-    #     archivo.write("\n\nResultados del metodo de Jacobi\n\n")
-        
-    
-    
-    # df.to_csv('resultados.txt', mode='a', header=True, index=False, sep='\t', float_format='%.8f')
-    
-    with open('resultados.txt', 'a') as archivo:
-        if method == 0:
-            archivo.write(f"\n\n\nResultados del metodo de Jacobi con la matriz A: \n{A}\nb: \n{b}\nx0:\n{x0i}\n \n\n")
+            T = np.linalg.inv(D) @ (L + U)
+            C = np.linalg.inv(D) @ b
+            x1 = T @ x0 + C
         elif method == 1:
-            archivo.write(f"\n\n\nResultados del metodo de Gauss-Seidel con la matriz A: \n{A}\n\nb: \n{b}\n\nx0:\n{x0i}\n \n\n\n\n")
-        archivo.write(tabulate(tabla, headers=["Iteraciones", "x1", "x2", "x3", "Error"], tablefmt="github", floatfmt=".8f") + "\n")
+            T = np.linalg.inv(D - L) @ U
+            C = np.linalg.inv(D - L) @ b
+            x1 = T @ x0 + C
+        E = (np.linalg.norm(x1 - x0, ord=np.inf)) / (np.linalg.norm(x1, ord=np.inf))
+        error = E
+        if c == 0:
+            tabla.append([c] + list(x0) + [0])
+        else:
+            tabla.append([c] + list(x0) + [E_anterior])
+        for i in range(len(x0)):
+            solutions[i].append(x1[i])
+        errors.append(E)
+        x0 = x1
+        c += 1
+        E_anterior = E
+
+    if error < Tol:
+        s = x0
+        eigenvalores = np.linalg.eigvals(T)
+        max_eig = np.max(np.abs(eigenvalores))
+        st.write("Matriz T: ")
+        st.write(T)
+        st.write("")
+        st.write(f"Eigenvalues: {max_eig}")
+        st.write("")
+        st.write(f"La aproximación de la solución del sistema con una tolerancia = {Tol} es: ")
+        st.write(s)
+    else:
+        s = x0
+        st.error(f"Fracasó en {Niter} iteraciones", icon="🚨")
+
+    tabla.append([c] + list(x0) + [E])
+    df = pd.DataFrame(tabla, columns=['Iteracion'] + [f'x{i+1}' for i in range(len(x0))] + ['Error'])
+    st.write(df)
+
+    # Save the results to a text file
+    with open('resultados.txt', 'a') as archivo:
+        if method == 0:
+            archivo.write(f"\n\n\nResultados del metodo de Jacobi con la matriz A: \n{A}\nb: \n{b}\nx0:\n{x0i}\n\n")
+        elif method == 1:
+            archivo.write(f"\n\n\nResultados del metodo de Gauss-Seidel con la matriz A: \n{A}\nb: \n{b}\nx0:\n{x0i}\n\n")
+        archivo.write(tabulate(tabla, headers=["Iteracion"] + [f'x{i+1}' for i in range(len(x0))] + ["Error"], tablefmt="github", floatfmt=".8f") + "\n")
+
+    # Plot the convergence of the solutions
+    plt.figure()
+    for i in range(len(x0)):
+        plt.plot(range(c + 1), solutions[i], label=f'x{i+1}')
+    plt.xlabel('Iteraciones')
+    plt.ylabel('Valor de las variables')
+    plt.title('Convergencia de las soluciones')
+    plt.legend()
+    plt.savefig('convergencia.png')
+    st.image('convergencia.png')
+
+    # Plot the error vs iterations
+    plt.figure()
+    plt.plot(range(1, c + 1), errors, label='Error')
+    plt.xlabel('Iteraciones')
+    plt.ylabel('Error')
+    plt.title('Error vs Iteraciones')
+    plt.legend()
+    plt.savefig('error.png')
+    st.image('error.png')
+
+    return (E, s)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# #Sor
+# def sor_method(A,b,x0,Tol,Niter,w):
+#     x0i = x0
+#     c=0
+#     error = Tol+1
+#     D = np.diag(np.diag(A))
+#     L = -np.tril(A, -1)
+#     U = -np.triu(A, 1)
+#     tabla = []
+#     while error > Tol and c < Niter:
+#         T = np.linalg.inv(D-w*L)@((1-w)*D+w*U)
+#         C = w*np.linalg.inv(D-w*L)@b
+#         x1 = T@x0+C
+#         E = (np.linalg.norm(x1-x0, ord=np.inf))
+#         error = E
+#         if c==0:
+#             tabla.append([c] + list(x0) + [0])
+#         else:
+#             tabla.append([c] + list(x0) + [E_anterior])
+#         x0 = x1
+#         c += 1
+#         E_anterior = E
+#     if error < Tol:
+#         s = x0
+#         eigenvalores = np.linalg.eigvals(T)
+#         max_eig = np.max(np.abs(eigenvalores))
+#         st.write("Matriz T: ")
+#         st.write(T)
+#         st.write("")
+#         st.write(f"Eigenvalues: {max_eig}")
+#         st.write("")
+#         st.write(f"La aproximación de la solución del sistema con una tolerancia = {Tol} es: ")
+#         st.write(s)
+#     else:
+#         s = x0
+#         st.error(f"Fracasó en {Niter} iteraciones", icon="🚨")
     
+#     tabla.append([c] + list(x0) + [E]) 
+#     df = pd.DataFrame(tabla, columns=['Iteración', 'x1', 'x2', 'x3', 'Error'])
+#     st.write(df, floatfmt=".8f", tablefmt="grid")
     
-    
-    return (E,s)
+#     with open('resultados.txt', 'a') as archivo:
+#         archivo.write(f"\n\n\nResultados del metodo de SOR con la matriz A: \n{A}\n\nb: \n{b}\n\nx0:\n{x0i}\n\nw:\n{w}\n \n\n")
+#         archivo.write(tabulate(tabla, headers=["Iteraciones", "x1", "x2", "x3", "Error"], tablefmt="github", floatfmt=".8f") + "\n")
+        
+        
+        
+#     return (E,s)
 
 
 
 
 
-#Sor
-def sor_method(A,b,x0,Tol,Niter,w):
-    x0i = x0
-    c=0
-    error = Tol+1
+
+
+
+
+
+
+
+
+
+
+
+
+
+def sor_method(A, b, x0, Tol, Niter, w):
+    x0i = x0.copy()
+    c = 0
+    error = Tol + 1
     D = np.diag(np.diag(A))
     L = -np.tril(A, -1)
     U = -np.triu(A, 1)
     tabla = []
+    errors = []
+    solutions = {i: [x0[i]] for i in range(len(x0))}
+    
     while error > Tol and c < Niter:
-        T = np.linalg.inv(D-w*L)@((1-w)*D+w*U)
-        C = w*np.linalg.inv(D-w*L)@b
-        x1 = T@x0+C
-        E = (np.linalg.norm(x1-x0, ord=np.inf))
+        T = np.linalg.inv(D - w * L) @ ((1 - w) * D + w * U)
+        C = w * np.linalg.inv(D - w * L) @ b
+        x1 = T @ x0 + C
+        E = (np.linalg.norm(x1 - x0, ord=np.inf)) #/ (np.linalg.norm(x1, ord=np.inf)) # Con la división si se piden cifras significativas, si no, se quita
         error = E
-        if c==0:
+        if c == 0:
             tabla.append([c] + list(x0) + [0])
         else:
             tabla.append([c] + list(x0) + [E_anterior])
+        for i in range(len(x0)):
+            solutions[i].append(x1[i])
+        errors.append(E)
         x0 = x1
         c += 1
         E_anterior = E
+    
     if error < Tol:
         s = x0
         eigenvalores = np.linalg.eigvals(T)
@@ -443,17 +657,64 @@ def sor_method(A,b,x0,Tol,Niter,w):
         s = x0
         st.error(f"Fracasó en {Niter} iteraciones", icon="🚨")
     
-    tabla.append([c] + list(x0) + [E]) 
-    df = pd.DataFrame(tabla, columns=['Iteración', 'x1', 'x2', 'x3', 'Error'])
-    st.write(df, floatfmt=".8f", tablefmt="grid")
+    tabla.append([c] + list(x0) + [E])
+    df = pd.DataFrame(tabla, columns=['Iteracion'] + [f'x{i+1}' for i in range(len(x0))] + ['Error'])
+    st.write(df)
     
     with open('resultados.txt', 'a') as archivo:
-        archivo.write(f"\n\n\nResultados del metodo de SOR con la matriz A: \n{A}\n\nb: \n{b}\n\nx0:\n{x0i}\n\nw:\n{w}\n \n\n")
-        archivo.write(tabulate(tabla, headers=["Iteraciones", "x1", "x2", "x3", "Error"], tablefmt="github", floatfmt=".8f") + "\n")
-        
-        
-        
-    return (E,s)
+        archivo.write(f"\n\n\nResultados del metodo de SOR con la matriz A: \n{A}\n\nb: \n{b}\n\nx0:\n{x0i}\n\nw:\n{w}\n\n")
+        archivo.write(tabulate(tabla, headers=["Iteracion"] + [f'x{i+1}' for i in range(len(x0))] + ["Error"], tablefmt="github", floatfmt=".8f") + "\n")
+
+    # Plot the convergence of the solutions
+    plt.figure()
+    for i in range(len(x0)):
+        plt.plot(range(c + 1), solutions[i], label=f'x{i+1}')
+    plt.xlabel('Iteraciones')
+    plt.ylabel('Valor de las variables')
+    plt.title('Convergencia de las soluciones')
+    plt.legend()
+    plt.savefig('convergencia_sor.png')
+    st.image('convergencia_sor.png')
+
+    # Plot the error vs iterations
+    plt.figure()
+    plt.plot(range(1, c + 1), errors, label='Error')
+    plt.xlabel('Iteraciones')
+    plt.ylabel('Error')
+    plt.title('Error vs Iteraciones')
+    plt.legend()
+    plt.savefig('error_sor.png')
+    st.image('error_sor.png')
+
+    return (E, s)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 #Métodos de capitulo 3
