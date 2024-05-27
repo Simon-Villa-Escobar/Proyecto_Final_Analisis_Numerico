@@ -427,8 +427,10 @@ def JacobiSeidel(A, b, x0, Tol, Niter, method):
     plt.ylabel('Valor de las variables')
     plt.title('Convergencia de las soluciones')
     plt.legend()
-    plt.savefig('convergencia.png')
-    st.image('convergencia.png')
+    st.pyplot()
+    
+    # plt.savefig('convergencia.png')
+    # st.image('convergencia.png')
 
     # Plot the error vs iterations
     plt.figure()
@@ -437,8 +439,10 @@ def JacobiSeidel(A, b, x0, Tol, Niter, method):
     plt.ylabel('Error')
     plt.title('Error vs Iteraciones')
     plt.legend()
-    plt.savefig('error.png')
-    st.image('error.png')
+    st.pyplot()
+    
+    # plt.savefig('error.png')
+    # st.image('error.png')
 
     return (E, s)
 
@@ -504,8 +508,10 @@ def sor_method(A, b, x0, Tol, Niter, w):
     plt.ylabel('Valor de las variables')
     plt.title('Convergencia de las soluciones')
     plt.legend()
-    plt.savefig('convergencia_sor.png')
-    st.image('convergencia_sor.png')
+    st.pyplot()
+    
+    # plt.savefig('convergencia_sor.png')
+    # st.image('convergencia_sor.png')
 
     # Plot the error vs iterations
     plt.figure()
@@ -514,8 +520,11 @@ def sor_method(A, b, x0, Tol, Niter, w):
     plt.ylabel('Error')
     plt.title('Error vs Iteraciones')
     plt.legend()
-    plt.savefig('error_sor.png')
-    st.image('error_sor.png')
+    st.pyplot()
+    
+    
+    # plt.savefig('error_sor.png')
+    # st.image('error_sor.png')
 
     return (E, s)
 
