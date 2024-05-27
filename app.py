@@ -46,7 +46,7 @@ def create_matrix_entry():
     # Rellenar la matriz con los valores introducidos por el usuario
     for i in range(rows):
         for j in range(columns):
-            matrix[i][j] = st.number_input(f"Valor en posición ({i}, {j})", key=f"{i}-{j}")
+            matrix[i][j] = st.number_input(f"Valor en posición ({i}, {j})", key=f"{i}-{j}", format="%.10f")
     
     # Guardar la matriz en una variable
     return matrix
@@ -56,7 +56,7 @@ def create_row_entry_x0():
     x0 = np.zeros(rows)
 
     for i in range(rows):
-        x0[i] = st.number_input(f"Valor en posición {i}", key=f"{i}")
+        x0[i] = st.number_input(f"Valor en posición {i}", key=f"{i}", format="%.10f")
 
     return x0
 
@@ -65,7 +65,7 @@ def create_row_entry_b():
     x0 = np.zeros(rows)
     
     for i in range(rows):
-        x0[i] = st.number_input(f"Valor en posición {i}", key=f'{14+i}')
+        x0[i] = st.number_input(f"Valor en posición {i}", key=f'{14+i}', format="%.10f")
 
     return x0
 
@@ -76,8 +76,8 @@ def create_data_lists_X_Y():
     y_values = []
     
     for i in range(num_values):
-        x = st.number_input(f"Valor de X {i+1}", key=f"x_{i}")
-        y = st.number_input(f"Valor de Y {i+1}", key=f"y_{i}")
+        x = st.number_input(f"Valor de X {i+1}", key=f"x_{i}", format="%.10f")
+        y = st.number_input(f"Valor de Y {i+1}", key=f"y_{i}", format="%.10f")
         
         x_values.append(x)
         y_values.append(y)
@@ -359,80 +359,6 @@ def secante(fn, f, p_0, p_1, tol, n):
         archivo.write(tabla_formateada + "\n")
     
 
-#Métodos de capitulo 2
-
-# Jacobi
-# def JacobiSeidel(A,b,x0,Tol,Niter,method):
-#     x0i = x0
-#     c = 0
-#     error = Tol+1
-#     D = np.diag(np.diag(A))
-#     L = -np.tril(A, -1)
-#     U = -np.triu(A, 1)
-#     tabla = []
-#     while error > Tol and c < Niter:
-#         if method == 0:
-#             T = np.linalg.inv(D)@(L+U)
-#             C = np.linalg.inv(D)@b
-#             x1 = T@x0+C
-#         if method == 1:
-#             T = np.linalg.inv(D-L)@U
-#             C = np.linalg.inv(D-L)@b
-#             x1 = T@x0+C
-#         E = (np.linalg.norm(x1-x0, ord=np.inf))/(np.linalg.norm(x1, ord=np.inf)) # Con la división si se piden cifras significativas, si no, se quita
-#         error = E
-#         if c==0:
-#             tabla.append([c] + list(x0) + [0])
-#         else:
-#             tabla.append([c] + list(x0) + [E_anterior])
-#         x0 = x1
-#         c += 1
-#         E_anterior = E
-#     if error < Tol:
-#         s = x0
-#         eigenvalores = np.linalg.eigvals(T)
-#         max_eig = np.max(np.abs(eigenvalores))
-#         st.write("Matriz T: ")
-#         st.write(T)
-#         st.write("")
-#         st.write(f"Eigenvalues: {max_eig}")
-#         st.write("")
-#         st.write(f"La aproximación de la solución del sistema con una tolerancia = {Tol} es: ")
-#         st.write(s)
-#     else:
-#         s = x0
-#         st.error(f"Fracasó en {Niter} iteraciones", icon="🚨")
-
-#     tabla.append([c] + list(x0) + [E]) 
-#     df = pd.DataFrame(tabla, columns=['Iteración', 'x1', 'x2', 'x3', 'Error'])
-#     st.write(df, floatfmt=".8f", tablefmt="grid")
-    
-#     # with open ('resultados.txt', 'a') as archivo:
-#     #     archivo.write("\n\nResultados del metodo de Jacobi\n\n")
-        
-    
-    
-#     # df.to_csv('resultados.txt', mode='a', header=True, index=False, sep='\t', float_format='%.8f')
-    
-#     with open('resultados.txt', 'a') as archivo:
-#         if method == 0:
-#             archivo.write(f"\n\n\nResultados del metodo de Jacobi con la matriz A: \n{A}\nb: \n{b}\nx0:\n{x0i}\n \n\n")
-#         elif method == 1:
-#             archivo.write(f"\n\n\nResultados del metodo de Gauss-Seidel con la matriz A: \n{A}\n\nb: \n{b}\n\nx0:\n{x0i}\n \n\n\n\n")
-#         archivo.write(tabulate(tabla, headers=["Iteraciones", "x1", "x2", "x3", "Error"], tablefmt="github", floatfmt=".8f") + "\n")
-    
-    
-    
-#     return (E,s)
-
-
-
-
-
-
-
-
-
 def JacobiSeidel(A, b, x0, Tol, Niter, method):
     x0i = x0.copy()
     c = 0
@@ -473,7 +399,7 @@ def JacobiSeidel(A, b, x0, Tol, Niter, method):
         st.write("Matriz T: ")
         st.write(T)
         st.write("")
-        st.write(f"Eigenvalues: {max_eig}")
+        st.write(f"Radio espectral: {max_eig}")
         st.write("")
         st.write(f"La aproximación de la solución del sistema con una tolerancia = {Tol} es: ")
         st.write(s)
@@ -519,101 +445,6 @@ def JacobiSeidel(A, b, x0, Tol, Niter, method):
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# #Sor
-# def sor_method(A,b,x0,Tol,Niter,w):
-#     x0i = x0
-#     c=0
-#     error = Tol+1
-#     D = np.diag(np.diag(A))
-#     L = -np.tril(A, -1)
-#     U = -np.triu(A, 1)
-#     tabla = []
-#     while error > Tol and c < Niter:
-#         T = np.linalg.inv(D-w*L)@((1-w)*D+w*U)
-#         C = w*np.linalg.inv(D-w*L)@b
-#         x1 = T@x0+C
-#         E = (np.linalg.norm(x1-x0, ord=np.inf))
-#         error = E
-#         if c==0:
-#             tabla.append([c] + list(x0) + [0])
-#         else:
-#             tabla.append([c] + list(x0) + [E_anterior])
-#         x0 = x1
-#         c += 1
-#         E_anterior = E
-#     if error < Tol:
-#         s = x0
-#         eigenvalores = np.linalg.eigvals(T)
-#         max_eig = np.max(np.abs(eigenvalores))
-#         st.write("Matriz T: ")
-#         st.write(T)
-#         st.write("")
-#         st.write(f"Eigenvalues: {max_eig}")
-#         st.write("")
-#         st.write(f"La aproximación de la solución del sistema con una tolerancia = {Tol} es: ")
-#         st.write(s)
-#     else:
-#         s = x0
-#         st.error(f"Fracasó en {Niter} iteraciones", icon="🚨")
-    
-#     tabla.append([c] + list(x0) + [E]) 
-#     df = pd.DataFrame(tabla, columns=['Iteración', 'x1', 'x2', 'x3', 'Error'])
-#     st.write(df, floatfmt=".8f", tablefmt="grid")
-    
-#     with open('resultados.txt', 'a') as archivo:
-#         archivo.write(f"\n\n\nResultados del metodo de SOR con la matriz A: \n{A}\n\nb: \n{b}\n\nx0:\n{x0i}\n\nw:\n{w}\n \n\n")
-#         archivo.write(tabulate(tabla, headers=["Iteraciones", "x1", "x2", "x3", "Error"], tablefmt="github", floatfmt=".8f") + "\n")
-        
-        
-        
-#     return (E,s)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 def sor_method(A, b, x0, Tol, Niter, w):
     x0i = x0.copy()
     c = 0
@@ -649,7 +480,7 @@ def sor_method(A, b, x0, Tol, Niter, w):
         st.write("Matriz T: ")
         st.write(T)
         st.write("")
-        st.write(f"Eigenvalues: {max_eig}")
+        st.write(f"Radio espectral: {max_eig}")
         st.write("")
         st.write(f"La aproximación de la solución del sistema con una tolerancia = {Tol} es: ")
         st.write(s)
@@ -687,33 +518,6 @@ def sor_method(A, b, x0, Tol, Niter, w):
     st.image('error_sor.png')
 
     return (E, s)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -1001,8 +805,8 @@ if metodo_seleccionado_capitulo1 == 'Bisección':
     input_function = st.text_input('Digite la función a evaluar')
     function_name = st.latex(input_function)
     st.info('Recuerde que A debe ser menor a B', icon="ℹ️")
-    interval_a = st.number_input('Digite el intervalo a', min_value=-500, max_value=500, step=1, value=-5)
-    interval_b = st.number_input('Digite el intervalo b', min_value=-500, max_value=500, step=1, value=5)
+    interval_a = st.number_input('Digite el intervalo a', min_value=-500.00000, max_value=500.00000, value=-5.000000, format="%.5f")
+    interval_b = st.number_input('Digite el intervalo b', min_value=-500.00000, max_value=500.00000, value=5.000000, format="%.5f")
     tolerance = st.text_input('Digite la tolerancia',value=0.5e-5)
     valor = float(tolerance)
     max_iterations = st.number_input('Digite la iteración máxima', min_value=1, step=1,value=100)
@@ -1075,7 +879,7 @@ elif metodo_seleccionado_capitulo1 == 'Punto Fijo':
     G(x) sea continua en el intervalo
     F(x) = 0 y G(x) = x""", icon="ℹ️")
     
-    initial_value = st.number_input('Digite el valor inicial X0', min_value=-500.0, max_value=500.0, step=0.5, value=20.0, format="%.2f")
+    initial_value = st.number_input('Digite el valor inicial X0', min_value=-500.00000, max_value=500.00000, value=20.00000, format="%.5f")
     tolerance = st.text_input('Digite la tolerancia',value=0.5e-5)
     valor = float(tolerance)
     max_iterations = st.number_input('Digite la iteración máxima', min_value=1, step=1, value=100)
@@ -1166,8 +970,9 @@ elif metodo_seleccionado_capitulo1 == 'Regla Falsa':
 
     input_function = st.text_input('Digite la función a evaluar')
     function_name = st.latex(input_function)
-    interval_a = st.number_input('Digite el intervalo a', min_value=-500, max_value=500, step=1, value=-5)
-    interval_b = st.number_input('Digite el intervalo b', min_value=-500, max_value=500, step=1, value=5)
+    st.info('Recuerde que A debe ser menor a B', icon="ℹ️")
+    interval_a = st.number_input('Digite el intervalo a', min_value=-500.00000, max_value=500.00000, value=-5.000000, format="%.5f")
+    interval_b = st.number_input('Digite el intervalo b',  min_value=-500.00000, max_value=500.00000, value=5.000000, format="%.5f")
     tolerance = st.text_input('Digite la tolerancia',value=0.5e-5)
     valor = float(tolerance)
     max_iterations = st.number_input('Digite la iteración máxima', min_value=1, step=1, value=100)
@@ -1250,7 +1055,7 @@ if metodo_seleccionado_capitulo1 == 'Newton':
             st.latex(f"f'(x) = {sym.latex(function_df)}")
             
             # Pedir el valor inicial, la tolerancia y el número máximo de iteraciones
-            initial_value = st.number_input('Digite el valor inicial X0', min_value=-500.0, max_value=500.0, step=0.5, value=5.0, format="%.2f")
+            initial_value = st.number_input('Digite el valor inicial X0', min_value=-500.00000, max_value=500.00000, value=5.00000, format="%.5f")
             tolerance = st.text_input('Digite la tolerancia', value=0.5e-5)
             valor = float(tolerance)
             max_iterations = st.number_input('Digite la iteración máxima', min_value=1, step=1, value=100)
@@ -1367,16 +1172,9 @@ if metodo_seleccionado_capitulo1 == 'Raices Multiples':
             function_df2 = sym.sympify(input_function_df2)
             st.latex(f"f''(x) = {sym.latex(function_df2)}")
             
-            
-
-            # function_df = sym.sympify(input_function_df)
-            # function_df2 = sym.sympify(input_function_df2)
-            
-            # st.latex(f"f'(x) = {sym.latex(function_df)}")
-            # st.latex(f"f''(x) = {sym.latex(function_df2)}")
 
             # Pedir el valor inicial, la tolerancia y el número máximo de iteraciones
-            initial_value = st.number_input('Digite el valor inicial X0', min_value=-500.0, max_value=500.0, step=1.0, value=5.0)
+            initial_value = st.number_input('Digite el valor inicial X0', min_value=-500.00000, max_value=500.00000, value=5.00000, format="%.5f")
             tolerance = st.text_input('Digite la tolerancia', value=0.5e-5)
             valor = float(tolerance)
             max_iterations = st.number_input('Digite la iteración máxima', min_value=1, step=1, value=100)
@@ -1490,8 +1288,10 @@ elif metodo_seleccionado_capitulo1 == 'Secante':
     
     input_function = st.text_input('Digite la función a evaluar')
     function_name = st.latex(input_function.replace('(', '{').replace(')', '}'))
-    interval_a = st.number_input('Digite el valor inicial (x0)', min_value=-500.0, max_value=500.0, step=0.5, value=-5.0)
-    interval_b = st.number_input('Digite el valor inicial (x1)', min_value=-500.0, max_value=500.0, step=0.5, value=5.0)
+    st.info('Recuerde que A debe ser menor a B', icon="ℹ️")
+
+    interval_a = st.number_input('Digite el valor inicial (x0)', min_value=-500.00000, max_value=500.00000, value=-5.000000, format="%.5f")
+    interval_b = st.number_input('Digite el valor inicial (x1)', min_value=-500.00000, max_value=500.00000, value=5.000000, format="%.5f")
     tolerance = st.text_input('Digite la tolerancia',value=1e-7)
     valor = float(tolerance)
     max_iterations = st.number_input('Digite la iteración máxima', min_value=1, step=1, value=100)
@@ -1522,6 +1322,77 @@ elif metodo_seleccionado_capitulo1 == 'Secante':
 if metodo_seleccionado_capitulo2 == 'Jacobi':
 
     st.header("Método de Jacobi")
+    
+    
+    
+    st.write("")
+    st.write("")
+    st.write("")
+    st.write("")
+    st.write("------------------------------------------------")
+    st.write("")
+    st.write("")
+    st.write("")
+    st.write("")
+
+    st.write("Paso 1 del Método de Jacobi:")
+    st.write("Descomponer la matriz A en:")
+    st.latex(r'A = D - L - U')
+    st.write("donde:")
+    st.latex(r'D \text{ es la matriz diagonal de } A')
+    st.latex(r'L \text{ es la matriz triangular inferior de } A')
+    st.latex(r'U \text{ es la matriz triangular superior de } A')
+
+    st.write("")
+    st.write("------------------------------------------------")
+    st.write("")
+    st.write("Paso 2 del Método de Jacobi:")
+    st.write("Calcular la matriz de iteración y el vector constante:")
+    st.latex(r'T_J = D^{-1}(L + U)')
+    st.latex(r'C_J = D^{-1} b')
+
+    st.write("")
+    st.write("------------------------------------------------")
+    st.write("")
+    st.write("Paso 3 del Método de Jacobi:")
+    st.write("Realizar la iteración hasta alcanzar la convergencia:")
+    st.latex(r'x^{(k+1)} = T_J x^{(k)} + C_J')
+    st.write("donde \( k \) indica la iteración actual.")
+
+    st.write("")
+    st.write("")
+    st.write("")
+    st.write("")
+    st.write("------------------------------------------------")
+    st.write("")
+    st.write("")
+    st.write("")
+    st.write("")
+
+    st.write("Explicación de las letras:")
+    st.write(r"A: Matriz de coeficientes del sistema de ecuaciones")
+    st.write(r"D: Matriz diagonal de A")
+    st.write(r"L: Matriz triangular inferior de A")
+    st.write(r"U: Matriz triangular superior de A")
+    st.write(r"T_J: Matriz de iteración del método de Jacobi")
+    st.write(r"C_J: Vector constante del método de Jacobi")
+    st.write(r"x^{(k)}: Vector de incógnitas en la iteración k")
+    st.write(r"b: Vector de términos independientes")
+    
+    
+    st.write("")
+    st.write("")
+    st.write("")
+    st.write("")
+    st.write("------------------------------------------------")
+    st.write("")
+    st.write("")
+    st.write("")
+    st.write("")
+    
+    
+    
+    
 
     st.subheader('Datos Matriz A')
     st.info('Recuerde que la matriz debe ser nxn', icon="ℹ️")
@@ -1531,6 +1402,13 @@ if metodo_seleccionado_capitulo2 == 'Jacobi':
     # Mostrar la matriz en la interfaz de usuario
     st.write("Matriz A creada:")
     st.write(A_matrix_entry)
+    
+    st.info("""
+            Recuerde que la convergencia solo se garantiza si:
+    - La matriz A es diagonalmente dominante
+    - El radio espectral de la matriz T_J es menor a 1
+            
+            """)
 
     st.subheader('Datos X0')
     st.info('Recuerde que la matriz debe ser nx1', icon="ℹ️")
@@ -1553,6 +1431,66 @@ if metodo_seleccionado_capitulo2 == 'Jacobi':
 elif metodo_seleccionado_capitulo2 == 'Gauss':
 
     st.header("Método de Gauss")
+    
+    
+    
+    
+    st.write("")
+    st.write("")
+    st.write("")
+    st.write("")
+    st.write("------------------------------------------------")
+    st.write("")
+    st.write("")
+    st.write("")
+    st.write("")
+
+    st.write("Paso 1 del Método de Gauss-Seidel:")
+    st.write("Descomponer la matriz A en:")
+    st.latex(r'A = D - L - U')
+    st.write("donde:")
+    st.latex(r'D \text{ es la matriz diagonal de } A')
+    st.latex(r'L \text{ es la matriz triangular inferior de } A')
+    st.latex(r'U \text{ es la matriz triangular superior de } A')
+
+    st.write("")
+    st.write("------------------------------------------------")
+    st.write("")
+    st.write("Paso 2 del Método de Gauss-Seidel:")
+    st.write("Calcular la matriz de iteración y el vector constante:")
+    st.latex(r'T_G = (D - L)^{-1} U')
+    st.latex(r'C_G = (D - L)^{-1} b')
+
+    st.write("")
+    st.write("------------------------------------------------")
+    st.write("")
+    st.write("Paso 3 del Método de Gauss-Seidel:")
+    st.write("Realizar la iteración hasta alcanzar la convergencia:")
+    st.latex(r'x^{(k+1)} = T_G x^{(k)} + C_G')
+    st.write("donde \( k \) indica la iteración actual.")
+
+    st.write("")
+    st.write("")
+    st.write("")
+    st.write("")
+    st.write("------------------------------------------------")
+    st.write("")
+    st.write("")
+    st.write("")
+    st.write("")
+
+    st.write("Explicación de las letras:")
+    st.write(r"A: Matriz de coeficientes del sistema de ecuaciones")
+    st.write(r"D: Matriz diagonal de A")
+    st.write(r"L: Matriz triangular inferior de A")
+    st.write(r"U: Matriz triangular superior de A")
+    st.write(r"T_G: Matriz de iteración del método de Gauss-Seidel")
+    st.write(r"C_G: Vector constante del método de Gauss-Seidel")
+    st.write(r"x^{(k)}: Vector de incógnitas en la iteración k")
+    st.write(r"b: Vector de términos independientes")
+
+
+
 
     st.subheader('Datos Matriz A')
     st.info('Recuerde que la matriz debe ser nxn', icon="ℹ️")
@@ -1562,6 +1500,11 @@ elif metodo_seleccionado_capitulo2 == 'Gauss':
     # Mostrar la matriz en la interfaz de usuario
     st.write("Matriz A creada:")
     st.write(A_matrix_entry)
+    
+    st.info("""
+            Recuerde que la convergencia solo se garantiza si:
+    - La matriz A es diagonalmente dominante
+    - El radio espectral de la matriz T_G es menor a 1""")
     
     st.subheader('Datos X0')
     st.info('Recuerde que la matriz debe ser nx1', icon="ℹ️")
@@ -1583,6 +1526,73 @@ elif metodo_seleccionado_capitulo2 == 'Gauss':
     valor = float(tolerance)
 
 elif metodo_seleccionado_capitulo2 == 'Sor':
+    
+    st.header("Método SOR (Successive Over-Relaxation)")
+
+    st.write("")
+    st.write("")
+    st.write("")
+    st.write("")
+    st.write("------------------------------------------------")
+    st.write("")
+    st.write("")
+    st.write("")
+    st.write("")
+
+    st.write("Paso 1 del Método SOR:")
+    st.write("Descomponer la matriz A en:")
+    st.latex(r'A = D - L - U')
+    st.write("donde:")
+    st.latex(r'D \text{ es la matriz diagonal de } A')
+    st.latex(r'L \text{ es la matriz triangular inferior de } A')
+    st.latex(r'U \text{ es la matriz triangular superior de } A')
+
+    st.write("")
+    st.write("------------------------------------------------")
+    st.write("")
+    st.write("Paso 2 del Método SOR:")
+    st.write("Calcular la matriz de iteración y el vector constante con el factor de relajación \(\omega\):")
+    st.latex(r'T_{SOR} = (D + \omega L)^{-1} [(1 - \omega)D + \omega U]')
+    st.latex(r'C_{SOR} = \omega (D - \omega L)^{-1} b')
+
+    st.write("")
+    st.write("------------------------------------------------")
+    st.write("")
+    st.write("Paso 3 del Método SOR:")
+    st.write("Realizar la iteración hasta alcanzar la convergencia:")
+    st.latex(r'x^{(k+1)} = T_{SOR} x^{(k)} + C_{SOR}')
+    st.write("donde \( k \) indica la iteración actual.")
+
+    st.write("")
+    st.write("")
+    st.write("")
+    st.write("")
+    st.write("------------------------------------------------")
+    st.write("")
+    st.write("")
+    st.write("")
+    st.write("")
+
+    st.write("Explicación de las letras:")
+    st.write(r"A: Matriz de coeficientes del sistema de ecuaciones")
+    st.write(r"D: Matriz diagonal de A")
+    st.write(r"L: Matriz triangular inferior de A")
+    st.write(r"U: Matriz triangular superior de A")
+    st.write(r"w: Factor de relajación")
+    st.write(r"T_{SOR}: Matriz de iteración del método SOR")
+    st.write(r"C_{SOR}: Vector constante del método SOR")
+    st.write(r"x^{(k)}: Vector de incógnitas en la iteración k")
+    st.write(r"b: Vector de términos independientes")
+    
+    st.write("")
+    st.write("")
+    st.write("")
+    st.write("")
+    st.write("------------------------------------------------")
+    st.write("")
+    st.write("")
+    st.write("")
+    st.write("")
 
     st.subheader('Datos Matriz A')
     # Llamar a la función para crear la entrada de la matriz
@@ -1590,6 +1600,11 @@ elif metodo_seleccionado_capitulo2 == 'Sor':
     # Mostrar la matriz en la interfaz de usuario
     st.write("Matriz A creada:")
     st.write(A_matrix_entry)
+    
+    st.info(r"""
+            Recuerde que la convergencia solo se garantiza si 0 < w < 2 y:
+    - La matriz A es diagonalmente dominante
+    - El radio espectral de la matriz T_SOR es menor a 1""")
     
     st.subheader('Datos X0')
     st.info('Recuerde que debe ser proporcional al tamaño de la matriz', icon="ℹ️")
@@ -1605,13 +1620,73 @@ elif metodo_seleccionado_capitulo2 == 'Sor':
     st.write('B Creado:')
     st.write(row_b)
 
-    W = st.number_input('parámetro de relajación',min_value=0.0, max_value=2.0, value=0.4, step=0.1)
+    W = st.number_input('Factor de relajación (w)',min_value=0.0, max_value=2.0, value=0.4, step=0.1, format="%.5f")
     Niter = st.number_input('Ingrese el número de iteraciones: ',min_value=1, value=100, step=1)
     tolerance = st.text_input('Digite la tolerancia',value=1e-7)
     valor = float(tolerance)
 
 #Area principal capitulo 3
 if metodo_seleccionado_capitulo3 == 'Vandermonde':
+    
+    
+    st.header("Método de Interpolación de Vandermonde")
+
+    st.write("")
+    st.write("")
+    st.write("")
+    st.write("")
+    st.write("------------------------------------------------")
+    st.write("")
+    st.write("")
+    st.write("")
+    st.write("")
+
+    st.write("Paso 1 del Método de Interpolación de Vandermonde:")
+    st.write("Dado un conjunto de puntos \((x_0, y_0), (x_1, y_1), ..., (x_n, y_n)\), construir la matriz de Vandermonde \(V\):")
+    st.latex(r'V = \begin{pmatrix} 1 & x_0 & x_0^2 & \cdots & x_0^n \\ 1 & x_1 & x_1^2 & \cdots & x_1^n \\ 1 & x_2 & x_2^2 & \cdots & x_2^n \\ \vdots & \vdots & \vdots & \ddots & \vdots \\ 1 & x_n & x_n^2 & \cdots & x_n^n \end{pmatrix}')
+
+    st.write("")
+    st.write("------------------------------------------------")
+    st.write("")
+    st.write("Paso 2 del Método de Interpolación de Vandermonde:")
+    st.write("Plantear el sistema de ecuaciones lineales, donde:")
+    st.latex(r'V \begin{pmatrix} a_0 \\ a_1 \\ a_2 \\ \vdots \\ a_n \end{pmatrix} = \begin{pmatrix} y_0 \\ y_1 \\ y_2 \\ \vdots \\ y_n \end{pmatrix}')
+
+    st.write("")
+    st.write("------------------------------------------------")
+    st.write("")
+    st.write("Paso 3 del Método de Interpolación de Vandermonde:")
+    st.write("Resolver el sistema para encontrar los coeficientes del polinomio interpolante \(P(x) = a_0 + a_1 x + a_2 x^2 + ... + a_n x^n\).")
+
+    st.write("")
+    st.write("")
+    st.write("")
+    st.write("")
+    st.write("------------------------------------------------")
+    st.write("")
+    st.write("")
+    st.write("")
+    st.write("")
+
+    st.write("Explicación de las letras:")
+    st.write(r"x_i: Coordenadas x de los puntos dados")
+    st.write(r"y_i: Coordenadas y de los puntos dados")
+    st.write(r"V: Matriz de Vandermonde construida a partir de los puntos x_i")
+    st.write(r"a_i: Coeficientes del polinomio interpolante")
+    st.write(r"P(x): Polinomio interpolante")
+    
+    st.write("")
+    st.write("")
+    st.write("")
+    st.write("")
+    st.write("------------------------------------------------")
+    st.write("")
+    st.write("")
+    st.write("")
+    st.write("")
+
+    
+    
     # Llamar a la función para crear las listas de datos
     x_list, y_list = create_data_lists_X_Y()
     # Mostrar las listas de datos en la interfaz de usuario
@@ -1625,6 +1700,68 @@ if metodo_seleccionado_capitulo3 == 'Vandermonde':
 
 
 elif metodo_seleccionado_capitulo3 == 'Newton':
+    
+    
+    st.header("Método de Interpolación de Newton")
+
+    st.write("")
+    st.write("")
+    st.write("")
+    st.write("")
+    st.write("------------------------------------------------")
+    st.write("")
+    st.write("")
+    st.write("")
+    st.write("")
+
+    st.write("Paso 1 del Método de Interpolación de Newton:")
+    st.write("Dado un conjunto de puntos \((x_0, y_0), (x_1, y_1), ..., (x_n, y_n)\), calcular las diferencias divididas:")
+    st.latex(r'f[x_0] = y_0')
+    st.latex(r'f[x_0, x_1] = \frac{f[x_1] - f[x_0]}{x_1 - x_0}')
+    st.latex(r'f[x_1, x_2] = \frac{f[x_2] - f[x_1]}{x_2 - x_1}')
+    st.latex(r'f[x_{k}, x_{k+1}, x_{k+2}] = \frac{f[x_{k+1}, x_{k+2}] - f[x_{k}, x_{k+1}]}{x_{k+2} - x_{k}}')
+
+
+    st.write("")
+    st.write("------------------------------------------------")
+    st.write("")
+    st.write("Paso 2 del Método de Interpolación de Newton:")
+    st.write("Construir el polinomio interpolante de Newton:")
+    st.latex(r'P(x) = f[x_0] + f[x_0, x_1] (x - x_0) + f[x_0, x_1, x_2] (x - x_0)(x - x_1) + \cdots + f[x_0, x_1, \ldots, x_n] (x - x_0)(x - x_1) \cdots (x - x_{n-1})')
+
+    st.write("")
+    st.write("------------------------------------------------")
+    st.write("")
+    st.write("Paso 3 del Método de Interpolación de Newton:")
+    st.write("Evaluar el polinomio interpolante \(P(x)\) en el punto deseado \(x\).")
+
+    st.write("")
+    st.write("")
+    st.write("")
+    st.write("")
+    st.write("------------------------------------------------")
+    st.write("")
+    st.write("")
+    st.write("")
+    st.write("")
+
+    st.write("Explicación de las letras:")
+    st.write("x_i: Coordenadas x de los puntos dados")
+    st.write("y_i: Coordenadas y de los puntos dados")
+    st.write("f[x_i]: Diferencias divididas")
+    st.write("P(x): Polinomio interpolante de Newton")
+    
+    st.write("")
+    st.write("")
+    st.write("")
+    st.write("")
+    st.write("------------------------------------------------")
+    st.write("")
+    st.write("")
+    st.write("")
+    st.write("")
+    
+    
     # Llamar a la función para crear las listas de datos
     x_list, y_list = create_data_lists_X_Y()
     # Mostrar las listas de datos en la interfaz de usuario
