@@ -14,5 +14,6 @@ Este proyecto proporciona una interfaz gráfica para visualizar y utilizar diver
   pip install -r requirements.txt
 
 4. Ejecuta la linea siguiente en tu Powershell
+   ```sh
    streamlit run app.py
 
